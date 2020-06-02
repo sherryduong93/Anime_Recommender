@@ -17,6 +17,8 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>**-Optional: concepts_titlesonly**: 391706 anime titles & concepts, but no anime_id, so will be difficult to group with current dataset
 
 ## Data Cleaning
+<br>Ratings: Removed all ratings with '-1' which indicates no rating.
+<br>NOTE: Ratings matrix does not have ALL of the ratings provided by the users that make up the average rating column in the anime_df, will need to consider this for the collaborative filter based recommender. 
 <br>**Combining dataframes to get one large dataframe with all metadata for each anime**
 <br>The function for below cleaning is stored in src/data.py, full_anime_df() function: 
 <br>The anime data and rating data were combined in order to calculated weighted rating based on number of members that rated the anime.
@@ -76,9 +78,7 @@ User metadata from users_meta:
 -Duration: Needs to be converted to minutes without str
 -Genre: Vectorize and convert to features. Is it important to have more N-grams?
 -Studio & Producer: Perhaps only certain producers have high scores, look into this. Then, only categorical based on the popular ones.
--Ratings: Before alteration the ratings dataset uses a "-1" to represent missing ratings. I'm replacing these placeholders with a null value because I will later be calculating the average rating per user and don't want the average to be distorted
--Opening & Ending Themes: NLP - Any interesting clusters?
--NOTE: Ratings matrix does not have ALL of the ratings provided by the users that make up the average rating column in the anime_df, will need to consider this for the collaborative filter based recommender. 
+
 
 **Process**
 -Clustering anime groups based on the above features
@@ -88,7 +88,7 @@ User metadata from users_meta:
 -Use the anime_full['image_url'] column which has links to all anime photos, checked out url and it did not, but try later
 
 ## Next Steps & Conclusion
-<br>
+<br>-N-grams for the genre, pairs may be useful?
 
 ### Data Sources:
 Anime & user metadata from : https://www.kaggle.com/azathoth42/myanimelist
