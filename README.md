@@ -39,6 +39,7 @@ User metadata from users_meta:
 -Studio & Producer: Perhaps only certain producers have high scores, look into this. Then, only categorical based on the popular ones.
 -Ratings: Before alteration the ratings dataset uses a "-1" to represent missing ratings. I'm replacing these placeholders with a null value because I will later be calculating the average rating per user and don't want the average to be distorted
 -Opening & Ending Themes: NLP - Any interesting clusters?
+-NOTE: Ratings matrix does not have ALL of the ratings provided by the users that make up the average rating column in the anime_df, will need to consider this for the collaborative filter based recommender. 
 
 **Process**
 -Clustering anime groups based on the above features
