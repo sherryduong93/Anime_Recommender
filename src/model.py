@@ -1,22 +1,50 @@
 import pandas as pd
 
-def content_based(anime_full):
-    anime_map = anime_full[['anime_id','name','title_english']]
-    anime_map.set_index('anime_id')
-    anime_similarity_cosdf = pd.read_csv('/Users/sherryduong/Documents/Galvanize/Anime_Recommender/models/baseline_contentbased.csv')
+def content_based(anime_full, simp_df):
+    anime_map = anime_full[['anime_id','name','title_english', 'type']]
     anime_id = input('Find Your Favorite Anime Below, and paste the ID:')
-    rec_ids = anime_similarity_cosdf.iloc[int(anime_id),:].sort_values(ascending=False)[:10].index
-    print('Based On the anime referenced, you would endjoy:')
-    return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
+    media_type = anime_map[anime_map['anime_id']==int(anime_id)]['type'].values
+    if media_type == 'Movie':
+        type_ids = anime_map[anime_map['type']=='Movie']['anime_id']
+        rec_ids = simp_df.iloc[int(anime_id),simp_df.columns.isin(type_ids)].sort_values(ascending=False)[:10].index
+        print('Based On the anime referenced, you would endjoy:')
+        return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
+    elif media_type == 'Tv' or media_type == 'OVA' or media_type == 'ONA':
+        ova = anime_map['type']=='OVA'
+        ona = anime_map['type']=='ONA'
+        tv = anime_map['type']=='TV'
+        type_ids = anime_map[(ova) | (ona) | (tv)]['anime_id']
+        rec_ids = simp_df.iloc[int(anime_id),simp_df.columns.isin(type_ids)].sort_values(ascending=False)[:10].index
+        print('Based On the anime referenced, you would endjoy:')
+        return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
+    else:
+        rec_ids = simp_df.iloc[int(anime_id),:].sort_values(ascending=False)[:10].index
+        print('Based On the anime referenced, you would endjoy:')
+        return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
 
 
 def find_id(anime_full):
-    anime_map = anime_full[['anime_id','name','title_english']]
-    anime_map.set_index('anime_id')
-    keyword = input('Enter title keywords here to search:')
-    return anime_map[anime_map['name'].str.contains(keyword.title())==True]
+    anime_map = anime_full[['anime_id','name','title_english', 'type']]
+    media_type = input('Please select Movie, TV, or Both:').title()
+    keyword = input('Enter title keywords here to search:').title()
+    keyword_search_name = anime_map['name'].str.contains(keyword)==True
+    keyword_search_eng = anime_map['title_english'].str.contains(keyword)==True
+    if media_type == 'Both':
+        result = anime_map[((keyword_search_name) | (keyword_search_eng))]
+    elif media_type == 'Movie':
+        result = anime_map[((keyword_search_name) | (keyword_search_eng)) & (anime_map['type']=='Movie')]
+    elif media_type == 'Tv':
+        ova = anime_map['type']=='OVA'
+        ona = anime_map['type']=='ONA'
+        tv = anime_map['type']=='TV'
+        result = anime_map[((keyword_search_name) | (keyword_search_eng)) & ((ova) | (ona) | (tv))]
+    else:
+        result = 'Incorrect media type, please select from Movie, TV, or Both'
+    return result
 
 def popularity_rec(anime_full):
+    exp_anime = anime_full.copy()
+    exp_anime['genre'] = exp_anime['genre'].transform(lambda x: x.split(','))
     exp_anime = anime_full.explode('genre')
     
     rating_type = input('Please select rating for viewing from the following: All, PG, PG-13, R, R+, Rx:').upper()

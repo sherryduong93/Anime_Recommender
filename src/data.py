@@ -4,6 +4,8 @@ import numpy as np
 def import_data():
     anime_df = pd.read_csv('data/anime.csv')
     rating_df = pd.read_csv('data/rating.csv')
+    #Remove the -1's, which are no values for the ratings
+    rating_df = rating_df[rating_df['rating']!=-1]
     anime_meta = pd.read_csv('data/AnimeList_meta.csv')
     users_meta = pd.read_csv('data/UserList_Meta.csv')
     return anime_df, rating_df, anime_meta, users_meta
@@ -19,9 +21,6 @@ def weighted_rating(x,rating_count_col, avg_rating_col):
 
 
 def full_anime_df(rating_df, anime_df, anime_meta):
-    #Remove the -1's, which are no values for the ratings
-    rating_df = rating_df[rating_df['rating']!=-1]
-    
     #Get the total number of ratings per anime
     count_ratings = rating_df.groupby('anime_id').count().rename(columns={'rating': 'num_ratings'})['num_ratings']
     
@@ -41,9 +40,28 @@ def full_anime_df(rating_df, anime_df, anime_meta):
                    'PG - Children': 'PG', 'G - All Ages': 'G', 'R+ - Mild Nudity': 'R+', 
                    'Rx - Hentai':'RX', 'None': 'Unknown'}
     anime_full['rating_type'] = anime_full['rating_type'].map(rating_type_dict).fillna('Unknown')
+    
+    #Filling NaNs
     anime_full['genre'] = anime_full['genre'].fillna('Unknown')
-    anime_full['genre'] = anime_full['genre'].transform(lambda x: x.split(','))
+    anime_full['studio'] = anime_full['studio'].fillna('Unknown')
+    anime_full['producer'] = anime_full['producer'].fillna('Unknown')
+    
+    #Formatting the anime titles
     anime_full['name'] = anime_full['name'].str.title()
     anime_full['title_english'] = anime_full['title_english'].str.title()
     return anime_full
+
+def explode_text(anime_full):
+    exp_anime = anime_full.copy()
+    #explode all columns
+    exp_anime['genre'] = exp_anime['genre'].transform(lambda x: x.split(','))
+    exp_anime = exp_anime.explode('genre')
+    exp_anime['genre'] = exp_anime['genre'].transform(lambda x: x[1:] if x[0]==" " else x)
+    exp_anime['studio'] = exp_anime['studio'].transform(lambda x: x.split(','))
+    exp_anime = exp_anime.explode('studio')
+    exp_anime['producer'] = exp_anime['producer'].transform(lambda x: x.split(','))
+    exp_anime = exp_anime.explode('producer')
+    exp_anime['studio'] = exp_anime['studio'].transform(lambda x: x[1:] if x[0]==' ' else x)
+    exp_anime['producer'] = exp_anime['producer'].transform(lambda x: x[1:] if x[0]==' ' else x)
+    return exp_anime
 

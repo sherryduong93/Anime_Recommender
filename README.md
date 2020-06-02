@@ -7,7 +7,6 @@ The Data:
 -users_meta: 302,673 unique users
 -Optional: concepts_titlesonly: 391706 anime titles & concepts, but no anime_id, so will be difficult to group with current dataset
 
-**Content Based Recommender System:**
 Features from anime_df:
 --Genre 
 --How many episodes > feature engineer for "Commitment Type"
@@ -31,6 +30,21 @@ User metadata from users_meta:
 -Stats mean score > How generous/strict is the user?
 -username: Could we pull anything useful from the usernames? NLP?
 
+## EDA
+-avg_rating from the anime dataset: 6.473902
+-weighted_rating average from the anime dataset: 6.654531
+-Average ratings from the user rating dataset: 7.8
+-Could be due to rating data missing some ratings of animes listed in the anime dataset
+
+
+## Content Based Recommender System:
+**Baseline Content Based Recommender:**
+-Features: Type (Movie, TV, etc.), Source (Manga, Music, Book, etc.), Rating Type (PG, R, etc.), and Weighted Rated.
+-Similarity Metrics: Tested Cosine Similarity & Pairwise Distance. Spot-checking a few popular animes in each genre, Pairwise Distance performs the best with genre related recommendations, but is recommending unpopular anime, cosine similarity is recommending the popular anime, but not good at narrowing down to the right genre. 
+**Content Based Recommender Iteration 2:**
+<br>-Added dummified genre to the 
+<br>-Based on the EDA, some producers/studios have higher ratings overall than others, only the top 20 studios and producers will be captured in the next content based model.
+<br>-Adding Studio/Producers had almost no impact on the similarity matrix of the iteration with only genre added.
 
 
 **Data Cleaning To-Do's**
