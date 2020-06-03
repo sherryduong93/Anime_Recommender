@@ -48,14 +48,6 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 -Comparing the top 20 studios and producers, there are clear studios that are more highly rated by users.
 <br><img src="images/ratings_per_studio.png" width="425"/> <img src="images/ratings_per_producers.png" width="425"/> 
 
-User metadata from users_meta:
--Gender
--Location
--Birthdate > convert to age
--Member since data > Age of membership
--Stats_episode > How active is the user?
--Stats mean score > How generous/strict is the user?
--username: Could we pull anything useful from the usernames? NLP?
 
 ## Content Based Recommender System:
 **Anime_id Keyword**
@@ -86,12 +78,62 @@ User metadata from users_meta:
 <br>3, J.C.Staff, Toei Animation, Sunrise, OLM, Xebec
 <br>4, Toei Animation, Unknown, Nippon Animation, OLM, Tatsunoko Production</p>
 
+## Simple Collaborative Filter Recommenders with Correlation, KNN & SVD
+**Rating Data Statistics:**
+<br>On average, each user provides 90 ratings, median number of ratings given per user is 45
+<br>On average, each anime has 638 ratings, median number of ratings provided per anime is 57
+![image](images/ratings_dist.png)
+<br>For our simple collaborative filter recommenders, we want to recommend the most popular movies from our most active users. I will be removing all users with less than 300 ratings, and all animes with less than 2500 ratings. 
+<br>This leaves us with 4326 users, and 694 anime. This leaves us with 1M reviews.
+<br> **KNN Collaborative Filter**
+<br>Anime: Fruits Basket
+<br>Iteration 1: Fill in NaN's with 0:
+<p>Recommendations for 120 ['Fruits Basket']:
+<br>1: ['Ouran Koukou Host Club'], with distance of 0.373222052075192:
+<br>2: ['Chobits'], with distance of 0.4624859112856201:
+<br>3: ['Fullmetal Alchemist'], with distance of 0.4802540588214821:
+<br>4: ['D.N.Angel'], with distance of 0.484765127405153:
+<br>5: ['Vampire Knight'], with distance of 0.4859228901227741:
+<br>6: ['Sen To Chihiro No Kamikakushi'], with distance of 0.4903165145454421:
+<br>7: ['Lovely★Complex'], with distance of 0.4960176951616878:
+<br>8: ['Tsubasa Chronicle'], with distance of 0.49802071811742765:
+<br>9: ['Suzumiya Haruhi No Yuuutsu'], with distance of 0.49827088077896575:
+<br>10: ['Full Metal Panic!'], with distance of 0.4997038875693144:</p>
+
+<br>Iteration 2: Fill in NaN's with average user rating:
+<p>Recommendations for 120 ['Fruits Basket']:
+<br>1: ['Skip Beat!'], with distance of 0.373222052075192:
+<br>2: ['Howl No Ugoku Shiro'], with distance of 0.4624859112856201:
+<br>3: ['Absolute Duo'], with distance of 0.4802540588214821:
+<br>4: ['Zoku Natsume Yuujinchou'], with distance of 0.484765127405153:
+<br>5: ['Lovely★Complex'], with distance of 0.4859228901227741:
+<br>6: ['Natsume Yuujinchou'], with distance of 0.4903165145454421:
+<br>7: ['Nodame Cantabile'], with distance of 0.4960176951616878:
+<br>8: ['Natsume Yuujinchou San'], with distance of 0.49802071811742765:
+<br>9: ['Natsume Yuujinchou Shi'], with distance of 0.49827088077896575:
+<br>10: ['Kimi Ni Todoke'], with distance of 0.4997038875693144:</p>
+
+<br>Iteration 3: Fill in NaN's with average anime rating:
+<p>Recommendations for 120 ['Fruits Basket']:
+<br>1: ['Ouran Koukou Host Club'], with distance of 0.373222052075192:
+<br>2: ['Vampire Knight'], with distance of 0.4624859112856201:
+<br>3: ['07-Ghost'], with distance of 0.4802540588214821:
+<br>4: ['Lovely★Complex'], with distance of 0.484765127405153:
+<br>5: ['Special A'], with distance of 0.4859228901227741:
+<br>6: ['Vampire Knight Guilty'], with distance of 0.4903165145454421:
+<br>7: ['Kamisama Hajimemashita'], with distance of 0.4960176951616878:
+<br>8: ['Cardcaptor Sakura'], with distance of 0.49802071811742765:
+<br>9: ['Howl No Ugoku Shiro'], with distance of 0.49827088077896575:
+<br>10: ['D.N.Angel'], with distance of 0.4997038875693144:</p>
+
 
 **Flash App**
 -Use the anime_full['image_url'] column which has links to all anime photos, checked out url and it did not, but try later
 
 ## Next Steps & Conclusion
-<br>-N-grams for the genre, pairs may be useful?
+<br>-Find more user metadata to explore clusters of users.
+<br>-Scrape description of each anime and user as a feature through NLP.
+<br>-N-grams for the genre, pairs may be useful.
 
 ### Data Sources:
 Anime & user metadata from : https://www.kaggle.com/azathoth42/myanimelist
