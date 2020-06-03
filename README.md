@@ -1,5 +1,5 @@
 # Find Your Next Anime
-![image](https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/a4637adf-84a6-4eba-8020-71e9a0452e82/dd99tk0-16be0db0-a59c-45a8-bfbb-252cab02956d.png)
+![image](https://i.ytimg.com/vi/RLXzQb57obs/maxresdefault.jpg)
 
 ## Motivations & Goals
 Since shelter-in-place was enacted, more people have been staying home looking for more ways to pass the time. Like many, I found myself wanting to escape to a world of fantasy, and found that anime was the best way to do this.
@@ -65,30 +65,30 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>**Content Based Recommender Iteration 3**
 <br>-Adding Studio/Producers had almost no impact on the similarity matrix of the iteration with only genre added.
 <br>-Explored clusters of producers & studios, but as there are many duplicates in multiple clusters, did not think this would be worth exploring.
-<p>Clusters of Producers:
+<pre>Clusters of Producers:
 <br>0, Bandai Visual, Pink Pineapple, Lantis, Sanrio, Fuji TV
 <br>1, Unknown, Bandai Visual, Aniplex, NHK, TV Tokyo
 <br>2, TV Tokyo, Tokyo Movie Shinsha, Sanrio, Sotsu, Milky Animation Label
 <br>3, NHK, Sanrio, Tokyo Movie Shinsha, Fuji TV, Milky Animation Label
-<br>4, Aniplex, Tokyo Movie Shinsha, Sanrio, Fuji TV, Milky Animation Label</p>
-<p>Clusters of Studios:
+<br>4, Aniplex, Tokyo Movie Shinsha, Sanrio, Fuji TV, Milky Animation Label</pre>
+<pre>Clusters of Studios:
 <br>0, Sunrise, Madhouse, Production I.G, Studio Pierrot, TMS Entertainment
 <br>1, Unknown, Sunrise, Madhouse, J.C.Staff, Studio Pierrot
 <br>2, Studio Deen, Toei Animation, Sunrise, OLM, Xebec
 <br>3, J.C.Staff, Toei Animation, Sunrise, OLM, Xebec
-<br>4, Toei Animation, Unknown, Nippon Animation, OLM, Tatsunoko Production</p>
+<br>4, Toei Animation, Unknown, Nippon Animation, OLM, Tatsunoko Production</pre>
 
 ## Simple Collaborative Filter Recommenders with Correlation, KNN & SVD
 **Rating Data Statistics:**
 <br>On average, each user provides 90 ratings, median number of ratings given per user is 45
 <br>On average, each anime has 638 ratings, median number of ratings provided per anime is 57
-![image](images/ratings_dist.png)
+![image](images/rating_count_dist.png)
 <br>For our simple collaborative filter recommenders, we want to recommend the most popular movies from our most active users. I will be removing all users with less than 300 ratings, and all animes with less than 2500 ratings. 
 <br>This leaves us with 4326 users, and 694 anime. This leaves us with 1M reviews.
-<br> **KNN Collaborative Filter**
+### KNN Collaborative Filter**
 <br>Anime: Fruits Basket
-<br>Iteration 1: Fill in NaN's with 0:
-<p>Recommendations for 120 ['Fruits Basket']:
+<br> **Iteration 1: Fill in NaN's with 0:**
+<pre>Recommendations for 120 ['Fruits Basket']:
 <br>1: ['Ouran Koukou Host Club'], with distance of 0.373222052075192:
 <br>2: ['Chobits'], with distance of 0.4624859112856201:
 <br>3: ['Fullmetal Alchemist'], with distance of 0.4802540588214821:
@@ -98,10 +98,9 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>7: ['Lovely★Complex'], with distance of 0.4960176951616878:
 <br>8: ['Tsubasa Chronicle'], with distance of 0.49802071811742765:
 <br>9: ['Suzumiya Haruhi No Yuuutsu'], with distance of 0.49827088077896575:
-<br>10: ['Full Metal Panic!'], with distance of 0.4997038875693144:</p>
-
-<br>Iteration 2: Fill in NaN's with average user rating:
-<p>Recommendations for 120 ['Fruits Basket']:
+<br>10: ['Full Metal Panic!'], with distance of 0.4997038875693144:</pre>
+<br>**Iteration 2: Fill in NaN's with average user rating:**
+<pre>Recommendations for 120 ['Fruits Basket']:
 <br>1: ['Skip Beat!'], with distance of 0.373222052075192:
 <br>2: ['Howl No Ugoku Shiro'], with distance of 0.4624859112856201:
 <br>3: ['Absolute Duo'], with distance of 0.4802540588214821:
@@ -111,10 +110,9 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>7: ['Nodame Cantabile'], with distance of 0.4960176951616878:
 <br>8: ['Natsume Yuujinchou San'], with distance of 0.49802071811742765:
 <br>9: ['Natsume Yuujinchou Shi'], with distance of 0.49827088077896575:
-<br>10: ['Kimi Ni Todoke'], with distance of 0.4997038875693144:</p>
-
-<br>Iteration 3: Fill in NaN's with average anime rating:
-<p>Recommendations for 120 ['Fruits Basket']:
+<br>10: ['Kimi Ni Todoke'], with distance of 0.4997038875693144:</pre>
+<br>**Iteration 3: Fill in NaN's with average anime rating:**
+<pre>Recommendations for 120 ['Fruits Basket']:
 <br>1: ['Ouran Koukou Host Club'], with distance of 0.373222052075192:
 <br>2: ['Vampire Knight'], with distance of 0.4624859112856201:
 <br>3: ['07-Ghost'], with distance of 0.4802540588214821:
@@ -124,7 +122,23 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>7: ['Kamisama Hajimemashita'], with distance of 0.4960176951616878:
 <br>8: ['Cardcaptor Sakura'], with distance of 0.49802071811742765:
 <br>9: ['Howl No Ugoku Shiro'], with distance of 0.49827088077896575:
-<br>10: ['D.N.Angel'], with distance of 0.4997038875693144:</p>
+<br>10: ['D.N.Angel'], with distance of 0.4997038875693144:</pre>
+### Exploring simple SVD with inputing the average rating per anime
+### Simple SVD Latent Feature Tagging
+<br>Not entirely clear the latent features, there are a lot of overlap
+<br>Feature 0: Action fantasy anime with war themes
+<br>Feature 1: Darker theme fantasies, Demons, Gods, Science, magic, mystery
+<br>Feature 2: Not clear, some comedies, romance, video game and music theme
+<br>Feature 3: Not clear
+<br>Feature 4: Action adventure
+<br>Feature 5: Naruto, Bleach & Dragonball like movies
+<br>Feature 6: High school with some random action
+<br>Feature 7: Romance high school with random naruto
+<br>Feature 8: Light hearted school/romance with some random Attack On Titan
+<br>Feature 9: Fantasy movies
+<br>**Result:**
+![image](images/SimpleSVD_FruitBasket.png)
+<br>Upon initial inspection, the results did not perform as well as KNN. SVD is having trouble recommending the correct genre and is recommending popular action animes. This is similar to the result we saw in the latent feature exploration with a lot of overlap in popular animes in many latent features.
 
 
 **Flash App**
