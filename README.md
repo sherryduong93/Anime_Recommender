@@ -4,10 +4,9 @@
 ## Motivations & Goals
 Since shelter-in-place was enacted, more people have been staying home looking for more ways to pass the time. Like many, I found myself wanting to escape to a world of fantasy, and found that anime was the best way to do this.
 <br>However, when I finished one anime, I was surpised how difficult it was to find a similar anime to the one I enjoyed. It required searching on Google and going through various forums to find suggestions that seemed aligned to my tastes.
-<br>I have three goals for this project:
-<br>1) A popularity based recommender that will recommend anime based on genre & "commitment level" (ie: Do I want a show with many seasons, a new show, or a movie just for tonight?)
-<br>2) A content based recommender that will recommend shows/movies similar to my last favorite anime
-<br>3) An item-item collaborative filter recommender system that will recommend anime based on the ratings and reviews of users similar to me.
+<br>I have two goals for this project:
+<br>1) A content based recommender that will recommend shows/movies similar to my last favorite anime
+<br>2) An item-item collaborative filter recommender system that will recommend anime based on the ratings and reviews of users similar to me.
 
 ## The Data:
 <br>**-anime_df**: 12,294 animes with name, genre, type, number of episodes, avg_rating, and members
@@ -20,7 +19,7 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>Ratings: Removed all ratings with '-1' which indicates no rating.
 <br>NOTE: Ratings matrix does not have ALL of the ratings provided by the users that make up the average rating column in the anime_df, will need to consider this for the collaborative filter based recommender. 
 <br>**Combining dataframes to get one large dataframe with all metadata for each anime**
-<br>The function for below cleaning is stored in src/data.py, full_anime_df() function: 
+<br>The function for below cleaning is stored in src/data_funcs.py, full_anime_df() function: 
 <br>The anime data and rating data were combined in order to calculated weighted rating based on number of members that rated the anime.
 <br>The anime meta data was joined with the anime dataset through the anime_id.
 <br>The rating types were streamlined to: G, PG, PG-13, R, R+,Rx, and "Unknown" for any blank values.
@@ -60,7 +59,7 @@ User metadata from users_meta:
 
 ## Content Based Recommender System:
 **Anime_id Keyword**
-<br>-To help users search for the anime_id desired, a helper function called find_id() in src/model.py was created, which will return all titles that have the keyword.
+<br>-To help users search for the anime_id desired, a helper function called find_id() in src/model_funcs.py was created, which will return all titles that have the keyword.
 <br>**Baseline Content Based Recommender:**
 <br>-Features: Type (Movie, TV, etc.), Source (Manga, Music, Book, etc.), Rating Type (PG, R, etc.), and Weighted Rated.
 <br>-Similarity Metrics: Tested Cosine Similarity & Pairwise Distance. Spot-checking a few popular animes in each genre, Pairwise Distance performs the best with genre related recommendations, but is recommending unpopular anime, cosine similarity is recommending the popular anime, but not good at narrowing down to the right genre. 
@@ -73,16 +72,6 @@ User metadata from users_meta:
 <br>-Overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though not perfect
 <br><img src="images/Content_Based_Compare_TV2.png" width="425"/> <img src="images/Content_Based_Movie2.png" width="425"/> 
 
-
-**Data Cleaning To-Do's**
--Duration: Needs to be converted to minutes without str
--Genre: Vectorize and convert to features. Is it important to have more N-grams?
--Studio & Producer: Perhaps only certain producers have high scores, look into this. Then, only categorical based on the popular ones.
-
-
-**Process**
--Clustering anime groups based on the above features
--Calculate similarity matrix on non-zero values
 
 **Flash App**
 -Use the anime_full['image_url'] column which has links to all anime photos, checked out url and it did not, but try later
