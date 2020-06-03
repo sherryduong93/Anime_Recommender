@@ -68,9 +68,23 @@ User metadata from users_meta:
 <br>**Content Based Recommender Iteration 2:**
 <br>-Added dummified genre to the content based model
 <br>-Based on the EDA, some producers/studios have higher ratings overall than others, only the top 20 studios and producers will be captured in the next content based model.
-<br>-Adding Studio/Producers had almost no impact on the similarity matrix of the iteration with only genre added.
 <br>-Overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though not perfect
 <br><img src="images/Content_Based_Compare_TV2.png" width="425"/> <img src="images/Content_Based_Movie2.png" width="425"/> 
+<br>**Content Based Recommender Iteration 3**
+<br>-Adding Studio/Producers had almost no impact on the similarity matrix of the iteration with only genre added.
+<br>-Explored clusters of producers & studios, but as there are many duplicates in multiple clusters, did not think this would be worth exploring.
+<p>Clusters of Producers:
+<br>0, Bandai Visual, Pink Pineapple, Lantis, Sanrio, Fuji TV
+<br>1, Unknown, Bandai Visual, Aniplex, NHK, TV Tokyo
+<br>2, TV Tokyo, Tokyo Movie Shinsha, Sanrio, Sotsu, Milky Animation Label
+<br>3, NHK, Sanrio, Tokyo Movie Shinsha, Fuji TV, Milky Animation Label
+<br>4, Aniplex, Tokyo Movie Shinsha, Sanrio, Fuji TV, Milky Animation Label</p>
+<p>Clusters of Studios:
+<br>0, Sunrise, Madhouse, Production I.G, Studio Pierrot, TMS Entertainment
+<br>1, Unknown, Sunrise, Madhouse, J.C.Staff, Studio Pierrot
+<br>2, Studio Deen, Toei Animation, Sunrise, OLM, Xebec
+<br>3, J.C.Staff, Toei Animation, Sunrise, OLM, Xebec
+<br>4, Toei Animation, Unknown, Nippon Animation, OLM, Tatsunoko Production</p>
 
 
 **Flash App**
