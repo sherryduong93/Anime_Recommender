@@ -4,9 +4,12 @@
 ## Motivations & Goals
 Since shelter-in-place was enacted, more people have been staying home looking for more ways to pass the time. Like many, I found myself wanting to escape to a world of fantasy, and found that anime was the best way to do this.
 <br>However, when I finished one anime, I was surpised how difficult it was to find a similar anime to the one I enjoyed. It required searching on Google and going through various forums to find suggestions that seemed aligned to my tastes.
-<br>I have two goals for this project:
+<br>**I have two goals for this project:**
 <br>1) A content based recommender that will recommend shows/movies similar to my last favorite anime
 <br>2) An item-item collaborative filter recommender system that will recommend anime based on the ratings and reviews of users similar to me.
+<br>**To evaluate my efforts:**
+<br>1) Spot check a few instances of the recommender with some hand-selected anime from each genre. Compare the results against MyAnimeList.net recommendations
+<br>2) Generate recommendations using Spark's ALS model, and improve the model based on RMSE. Compare the final recommendations from Spark's ALS model to the results of the simpler models. How many of the top 10 recommended in the simple models also exist in the ALS model recommendations?
 
 ## The Data:
 <br>**-anime_df**: 12,294 animes with name, genre, type, number of episodes, avg_rating, and members
@@ -85,8 +88,8 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 ![image](images/rating_count_dist.png)
 <br>For our simple collaborative filter recommenders, we want to recommend the most popular movies from our most active users. I will be removing all users with less than 300 ratings, and all animes with less than 2500 ratings. 
 <br>This leaves us with 4326 users, and 694 anime. This leaves us with 1M reviews.
-### KNN Collaborative Filter**
-<br>Anime: Fruits Basket
+### KNN Collaborative Filter
+Anime: Fruits Basket
 <br> **Iteration 1: Fill in NaN's with 0:**
 <pre>Recommendations for 120 ['Fruits Basket']:
 <br>1: ['Ouran Koukou Host Club'], with distance of 0.373222052075192:
@@ -125,26 +128,32 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>10: ['D.N.Angel'], with distance of 0.4997038875693144:</pre>
 ### Exploring simple SVD with inputing the average rating per anime
 ### Simple SVD Latent Feature Tagging
-<br>Not entirely clear the latent features, there are a lot of overlap
-<br>Feature 0: Action fantasy anime with war themes
-<br>Feature 1: Darker theme fantasies, Demons, Gods, Science, magic, mystery
-<br>Feature 2: Not clear, some comedies, romance, video game and music theme
-<br>Feature 3: Not clear
-<br>Feature 4: Action adventure
-<br>Feature 5: Naruto, Bleach & Dragonball like movies
+<pre>Not entirely clear the latent features, there are a lot of overlap
+<br>Feature 0: Action fantasy anime with war themes, Military Genre
+<br>Feature 1: Action and Sci-fi, supernatural
+<br>Feature 2: Not clear, some comedies, romance, action, video game military
+<br>Feature 3: Not clear - Action horror sci-fi, A-1 studio
+<br>Feature 4: Military, Action adventure, Sunrise and Bones studio
+<br>Feature 5: Naruto, Bleach and Dragonball like movies
 <br>Feature 6: High school with some random action
-<br>Feature 7: Romance high school with random naruto
-<br>Feature 8: Light hearted school/romance with some random Attack On Titan
-<br>Feature 9: Fantasy movies
+<br>Feature 7: Slice of life or romance, comedy, school
+<br>Feature 8: Unclear - mix of everything.
+<br>Feature 9: Supernatural and psychological</pre>
 <br>**Result:**
 ![image](images/SimpleSVD_FruitBasket.png)
-<br>Upon initial inspection, the results did not perform as well as KNN. SVD is having trouble recommending the correct genre and is recommending popular action animes. This is similar to the result we saw in the latent feature exploration with a lot of overlap in popular animes in many latent features.
+<br>Upon initial inspection, the results did not perform as well as KNN. SVD is having trouble recommending the correct genre and is recommending action animes for every attempt. This is similar to the result we saw in the latent feature exploration with a lot of overlap with action in nearly every latent feature.
+<br>A drawback of using these simple Collaborative Filter System is only using the most popular anime to make recommendations. Next we will look into ALS matrix factorization with Spark in order to use all of the data present.
+
+## Model Based Collaborative Filtering with Spark ALS
+<br>
 
 
 **Flash App**
 -Use the anime_full['image_url'] column which has links to all anime photos, checked out url and it did not, but try later
 
-## Next Steps & Conclusion
+## Conclusion, Caveats and Next Steps
+<br>-Recommender system performance is notoriously hard to quantify. Spot-checking a few instances is not enough to evaluate the entire model, and can be subjective depending on the user. The RMSE is not an exact measure either, since the ultimate success of the project is to provide the most useful recommendations to users.
+<br><br>**Next Steps**
 <br>-Find more user metadata to explore clusters of users.
 <br>-Scrape description of each anime and user as a feature through NLP.
 <br>-N-grams for the genre, pairs may be useful.
