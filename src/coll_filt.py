@@ -27,13 +27,13 @@ class iirc(object):
         cleaned_out = np.nan_to_num(out)
         return cleaned_out
     
-    def rec_anime(self, movie_id):
-        items_rated_by_this_user = self.ratings_mat[user_id].nonzero()[1]
-        relevant_items = np.intersect1d(self.neighborhoods[movie_id],
-                                            items_rated_by_this_user,
-                                            assume_unique=True)  
-        out = self.ratings_mat[user_id, relevant_items] * \
-                self.item_sim_mat[movie_id, relevant_items] / \
-                self.item_sim_mat[movie_id, relevant_items].sum()
-        cleaned_out = np.nan_to_num(out)
-        return cleaned_out
+    # def rec_anime(self, movie_id):
+    #     items_rated_by_this_user = self.ratings_mat[user_id].nonzero()[1]
+    #     relevant_items = np.intersect1d(self.neighborhoods[movie_id],
+    #                                         items_rated_by_this_user,
+    #                                         assume_unique=True)  
+    #     out = self.ratings_mat[user_id, relevant_items] * \
+    #             self.item_sim_mat[movie_id, relevant_items] / \
+    #             self.item_sim_mat[movie_id, relevant_items].sum()
+    #     cleaned_out = np.nan_to_num(out)
+    #     return cleaned_out

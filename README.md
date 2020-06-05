@@ -54,7 +54,7 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 
 ## Baseline Model:
 **Use the average rating of the training data to predict user ratings of the test dat**
-<br>RMSE: 1.50
+<br>RMSE: 1.57
 <br>Using just the average to predict user ratings already gathers pretty decent results. 
 ## Content Based Recommender System:
 **Anime_id Keyword**

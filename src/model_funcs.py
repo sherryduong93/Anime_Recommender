@@ -4,20 +4,25 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import pairwise_distances
 
+
 def sim_mat(anime_full, ver='basic'):
     '''
     Returns similarity matrix with cosine similarity based on the anime_dataframe provided
 
     INPUT - 
     anime_full: Formatted anime dataframe using the full_anime_df function, size (nxm)
-
+    ver: version of similarity matrix available, select from:
+        basic: 
+        genre: The above + Genre based similarity
+        adv: genre + popular studio & producer 
+    
     OUTPUT -
     dataframe containing the similaries between each anime in anime_full, size (nxn)
     '''
     if ver=='basic':
-        basic_rec = anime_full[['anime_id','type','source','rating_type','weighted_rating']]
+        basic_rec = anime_full[['anime_id','type','source','rating_type']] #removed 'weighted_rating' to test
         basic_rec = pd.get_dummies(basic_rec, columns=['type','source','rating_type']).set_index('anime_id')
-        basic_rec = basic_rec.dropna(axis=0, subset=['weighted_rating'])
+        # basic_rec = basic_rec.dropna(axis=0, subset=['weighted_rating']) 
         anime_similarity_cos = cosine_similarity(basic_rec)
         anime_similarity_cosdf = pd.DataFrame(anime_similarity_cos, index=basic_rec.T.columns, columns=basic_rec.T.columns)
         return anime_similarity_cosdf
@@ -131,6 +136,9 @@ def content_based(anime_full, simp_df):
         return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')[1:11]
 
 def popularity_rec(anime_full):
+    '''
+    FYI: This is incomplete and not yet running
+    '''
     exp_anime = anime_full.copy()
     exp_anime['genre'] = exp_anime['genre'].transform(lambda x: x.split(','))
     exp_anime = anime_full.explode('genre')
@@ -165,3 +173,24 @@ def popularity_rec(anime_full):
         return 'No match - Please try a different combination!'
     else:
         return result
+
+def pred_user_rating(rating_df, sim_mat, utility_mat, user_id, anime_id):
+    '''
+    INPUT:
+    rating_df: matrix with ratings for each anime and user
+    sim_mat: similarity matrix with similarity scores for all anime
+    utility_may: users(row) and anime_id(columns) with ratings for each anime provided by the user
+    user_id: User id of user to predict rating for
+    anime_id: Anime_id for anime to predict user rating
+
+    OUTPUT:
+    pred_rating: Predicted rating from the user(user_id) for anime(anime_id)
+    '''
+    anime_ids = rating_df[rating_df['user_id']==user_id]['anime_id'].values
+    anime_ids2 = anime_ids[anime_ids!=anime_id]
+    final_ids = anime_ids2[np.isin(anime_ids2, sim_mat.columns)]
+    ratings = utility_mat.iloc[utility_mat.index==user_id, utility_mat.columns.isin(final_ids)].values
+    sim_mat_red = sim_mat.iloc[:, sim_mat.columns.isin(final_ids)]
+    sims = sim_mat_red.iloc[sim_mat_red.index==anime_id, :].values
+    pred_rating = np.sum(ratings*sims)/np.sum(sims)
+    return pred_rating

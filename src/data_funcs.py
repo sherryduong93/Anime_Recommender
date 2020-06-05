@@ -2,12 +2,12 @@ import pandas as pd
 import numpy as np
 
 def import_data():
-    anime_df = pd.read_csv('/Users/sherryduong/Documents/Galvanize/Anime_Recommender/data/anime.csv')
-    rating_df = pd.read_csv('/Users/sherryduong/Documents/Galvanize/Anime_Recommender/data/rating.csv')
+    anime_df = pd.read_csv('data/anime.csv')
+    rating_df = pd.read_csv('data/rating.csv')
     #Remove the -1's, which are no values for the ratings
     rating_df = rating_df[rating_df['rating']!=-1]
-    anime_meta = pd.read_csv('/Users/sherryduong/Documents/Galvanize/Anime_Recommender/data/AnimeList_meta.csv')
-    users_meta = pd.read_csv('/Users/sherryduong/Documents/Galvanize/Anime_Recommender/data/UserList_Meta.csv')
+    anime_meta = pd.read_csv('data/AnimeList_meta.csv')
+    users_meta = pd.read_csv('data/UserList_Meta.csv')
     return anime_df, rating_df, anime_meta, users_meta
 
 
