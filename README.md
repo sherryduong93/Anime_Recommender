@@ -6,10 +6,10 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>However, when I finished one anime, I was surpised how difficult it was to find a similar anime to the one I enjoyed. It required searching on Google and going through various forums to find suggestions that seemed aligned to my tastes.
 <br>**I have two goals for this project:**
 <br>1) A content based recommender that will recommend shows/movies similar to my last favorite anime
-<br>2) An item-item collaborative filter recommender system that will recommend anime based on the ratings and reviews of users similar to me.
+<br>2) An item-item collaborative filter recommender system that will recommend anime based on the ratings of other users who also liked that anime.
 <br>**To evaluate my efforts:**
-<br>1) Spot check a few instances of the recommender with some hand-selected anime from each genre. Compare the results against MyAnimeList.net recommendations
-<br>2) Generate recommendations using Spark's ALS model, and improve the model based on RMSE. Compare the final recommendations from Spark's ALS model to the results of the simpler models. How many of the top 10 recommended in the simple models also exist in the ALS model recommendations?
+<br>1) Spot check a few instances of the recommender with some hand-selected anime from each genre that I am familiar with. Compare the results against MyAnimeList.net recommendations.
+<br>2) Predict ratings for subset of users (for which ratings data is present), compare the predicted ratings to actual ratings, evaluate using RMSE.
 
 ## The Data:
 <br>**-anime_df**: 12,294 animes with name, genre, type, number of episodes, avg_rating, and members
@@ -19,29 +19,29 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>**-Optional: concepts_titlesonly**: 391706 anime titles & concepts, but no anime_id, so will be difficult to group with current dataset
 
 ## Data Cleaning
-<br>Ratings: Removed all ratings with '-1' which indicates no rating.
-<br>NOTE: Ratings matrix does not have ALL of the ratings provided by the users that make up the average rating column in the anime_df, will need to consider this for the collaborative filter based recommender. 
+-Ratings: Removed all ratings with '-1' which indicates no rating.
+<br>-NOTE: Ratings matrix does not have ALL of the ratings provided by the users that make up the average rating column in the anime_df, will need to consider this for the collaborative filter based recommender. 
+<br>
 <br>**Combining dataframes to get one large dataframe with all metadata for each anime**
-<br>The function for below cleaning is stored in src/data_funcs.py, full_anime_df() function: 
+<br>-The function for below cleaning is stored in src/data_funcs.py, full_anime_df() function: 
 <br>The anime data and rating data were combined in order to calculated weighted rating based on number of members that rated the anime.
-<br>The anime meta data was joined with the anime dataset through the anime_id.
-<br>The rating types were streamlined to: G, PG, PG-13, R, R+,Rx, and "Unknown" for any blank values.
-<br>The blanks for genre, studio, and producer were also filled with "Unknown".
-<br>Dropped any duplicate columns contained in both the anime_meta dataset, and the anime dataset. Dropped any irrelevant columns with many nulls, or data that is not useful.
-<br>**Exploding the Genre, Producer, & Studio columns to see trends**
-<br>The function for performing this operation is the explode_text() function in src/data.py.
+<br>-The anime meta data was joined with the anime dataset through the anime_id in order to display all available meta data for each anime.
+<br>-The rating types were streamlined to: G, PG, PG-13, R, R+,Rx, and "Unknown" for any blank values.
+<br>-The blanks for genre, studio, and producer were also filled with "Unknown".
+<br>-Dropped any duplicate columns contained in both the anime_meta dataset, and the anime dataset. Dropped any irrelevant columns with many nulls, or data that is not useful.
+<br><br>**Exploding the Genre, Producer, & Studio columns to see trends**
+<br>-The function for performing this operation is the explode_text() function in src/data.py.
 
 ## EDA
 **Comparing the average rating to the weighted ratings**
--avg_rating from the anime dataset: 6.473902
--weighted_rating average from the anime dataset: 6.654531
+<br>-avg_rating from the anime dataset: 6.473902
+<br>-weighted_rating average from the anime dataset: 6.654531
+<br>-Average ratings from the user rating dataset: 7.8
 ![image](images/ratings_dist.png)
--Weighted ratings are more closely centered around the mean, right more positive right skew, meanwhile average ratings are more normally distributed.
--Average ratings from the user rating dataset: 7.8
--Could be due to rating data missing some ratings of animes listed in the anime dataset
+<br>-Weighted ratings are more closely centered around the mean, with more right skew, meanwhile average ratings are more normally distributed.
+<br>-The ratings dataset more closely resembles the average ratings, but centered around a higher mean rating. Could be due to rating data missing some ratings of animes listed in the anime dataset.
 
-**Ratings across different features**
--No major differences between anime type or source
+**Ratings across different features** : No major differences between anime type or source
 ![image](images/ratings_per_type.png)
 ![image](images/ratings_per_source.png)
 <br>-On average (not weighted), the PG-13 & R animes are doing slightly better than other rating types.
@@ -52,6 +52,10 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br><img src="images/ratings_per_studio.png" width="425"/> <img src="images/ratings_per_producers.png" width="425"/> 
 
 
+## Baseline Model:
+**Use the average rating of the training data to predict user ratings of the test dat**
+<br>RMSE: 1.50
+<br>Using just the average to predict user ratings already gathers pretty decent results. 
 ## Content Based Recommender System:
 **Anime_id Keyword**
 <br>-To help users search for the anime_id desired, a helper function called find_id() in src/model_funcs.py was created, which will return all titles that have the keyword.
@@ -59,11 +63,13 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>-Features: Type (Movie, TV, etc.), Source (Manga, Music, Book, etc.), Rating Type (PG, R, etc.), and Weighted Rated.
 <br>-Similarity Metrics: Tested Cosine Similarity & Pairwise Distance. Spot-checking a few popular animes in each genre, Pairwise Distance performs the best with genre related recommendations, but is recommending unpopular anime, cosine similarity is recommending the popular anime, but not good at narrowing down to the right genre. 
 <br>Results: (With cosine similarity), looking up recommendations for "Inuyasha"
+<br>RMSE on 50K random samples from test set: 1.362
 <br><img src="images/Content_Based_Compare_TV1.png" width="425"/> <img src="images/Content_Based_Movie_1.png" width="425"/> 
 <br>**Content Based Recommender Iteration 2:**
 <br>-Added dummified genre to the content based model
 <br>-Based on the EDA, some producers/studios have higher ratings overall than others, only the top 20 studios and producers will be captured in the next content based model.
 <br>-Overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though not perfect
+<br>RMSE on 50K random samples from test set: 1.362, no change from prior, though the recommendations for certain spot checks are vastly different.
 <br><img src="images/Content_Based_Compare_TV2.png" width="425"/> <img src="images/Content_Based_Movie2.png" width="425"/> 
 <br>**Content Based Recommender Iteration 3**
 <br>-Adding Studio/Producers had almost no impact on the similarity matrix of the iteration with only genre added.
@@ -145,14 +151,17 @@ Anime: Fruits Basket
 <br>A drawback of using these simple Collaborative Filter System is only using the most popular anime to make recommendations. Next we will look into ALS matrix factorization with Spark in order to use all of the data present.
 
 ## Model Based Collaborative Filtering with Spark ALS
-<br>
+<br>RMSE: 1.16
+<br>Spot-Check Results Here:
 
 
 **Flash App**
 -Use the anime_full['image_url'] column which has links to all anime photos, checked out url and it did not, but try later
 
 ## Conclusion, Caveats and Next Steps
-<br>-Recommender system performance is notoriously hard to quantify. Spot-checking a few instances is not enough to evaluate the entire model, and can be subjective depending on the user. The RMSE is not an exact measure either, since the ultimate success of the project is to provide the most useful recommendations to users.
+-Recommender system performance is notoriously hard to quantify. 
+<br>-Spot-checking a few instances is not enough to evaluate the entire model, and can be subjective depending on the user. 
+<br>-The RMSE is not an exact measure either, since the ultimate success of the project is to provide the most useful recommendations to users.
 <br><br>**Next Steps**
 <br>-Find more user metadata to explore clusters of users.
 <br>-Scrape description of each anime and user as a feature through NLP.
