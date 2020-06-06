@@ -8,8 +8,10 @@ app = Flask(__name__)
 anime_df, rating_df, anime_meta, users_meta = import_data()
 anime_full = full_anime_df(rating_df, anime_df, anime_meta)
 anime_map = anime_full[['anime_id','name','title_english', 'type']]
-df = anime_map[:10]
 simp_df = sim_mat(anime_full, ver='genre')
+
+otherusers_df = pd.read_csv('model/otherusers_rec2.csv').drop(columns=['Unnamed: 0']) #Use rec2 for 50 users, rec for 10
+yourrecs_df = pd.read_csv('model/your_recs2.csv').drop(columns=['Unnamed: 0']) #Use rec2 for 50 users, rec for 10
 
 @app.route('/', methods=["POST","GET"])
 def default():
@@ -26,17 +28,7 @@ def home():
 
 @app.route("/search_results/<media_type>-<keyword>")
 def search(media_type, keyword):
-    keyword_search_name = anime_map['name'].str.contains(keyword)==True
-    keyword_search_eng = anime_map['title_english'].str.contains(keyword)==True
-    if media_type == 'Both':
-        result = anime_map[((keyword_search_name) | (keyword_search_eng))]
-    elif media_type == 'Movie':
-        result = anime_map[((keyword_search_name) | (keyword_search_eng)) & (anime_map['type']=='Movie')]
-    elif media_type == 'Tv':
-        ova = anime_map['type']=='OVA'
-        ona = anime_map['type']=='ONA'
-        tv = anime_map['type']=='TV'
-        result = anime_map[((keyword_search_name) | (keyword_search_eng)) & ((ova) | (ona) | (tv))]
+    result = find_id(anime_map, keyword, media_type)
     return render_template('find_id.html',  search_results=[result.to_html(classes='data')], titles_search=result.columns.values)
 
 @app.route('/engine', methods=["POST","GET"])
@@ -51,25 +43,10 @@ def engine():
 @app.route('/recommendations/<an_id>', methods=("POST", "GET"))
 def recommendations(an_id):
     anime_id = int(an_id)
-    media_type = anime_map[anime_map['anime_id']==anime_id]['type'].values
-    anime_name = anime_map[anime_map['anime_id']==anime_id]['name'].values
-    anime_eng = anime_map[anime_map['anime_id']==anime_id]['title_english'].values
-    if media_type == 'Movie':
-        type_ids = anime_map[anime_map['type']=='Movie']['anime_id']
-        rec_ids = simp_df.loc[anime_id,simp_df.columns.isin(type_ids)].sort_values(ascending=False)[1:11].index
-        cb= anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
-    elif media_type == 'TV' or media_type == 'OVA' or media_type == 'ONA':
-        ova = anime_map['type']=='OVA'
-        ona = anime_map['type']=='ONA'
-        tv = anime_map['type']=='TV'
-        type_ids = anime_map[(ova) | (ona) | (tv)]['anime_id']
-        rec_ids = simp_df.loc[anime_id,simp_df.columns.isin(type_ids)].sort_values(ascending=False)[1:11].index
-        cb= anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
-    else:
-        rec_ids = simp_df.loc[anime_id,:].sort_values(ascending=False)[1:11].index
-        cb= anime_map[anime_map['anime_id'].isin(rec_ids)]
+    anime_name, media_type, anime_eng, cb = content_based(anime_id, anime_map, simp_df)
+    collab_filt = other_users(anime_id, otherusers_df,yourrecs_df, anime_map)
     return render_template('simple.html',  content_based=[cb.to_html(classes='data')], titles_CB=cb.columns.values, 
-    collab_filt=[df.to_html(classes='data')], titles_CF=df.columns.values, anime_name = str(anime_name)[2:-2], media_type = str(media_type)[2:-2], anime_eng = str(anime_eng)[2:-2])
+    collab_filt=[collab_filt.to_html(classes='data')], titles_CF=collab_filt.columns.values, anime_name = str(anime_name)[2:-2], media_type = str(media_type)[2:-2], anime_eng = str(anime_eng)[2:-2])
 
 
 if __name__ == '__main__':

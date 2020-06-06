@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import pairwise_distances
-
+from src.data_funcs import *
 
 def sim_mat(anime_full, ver='basic'):
     '''
@@ -69,7 +69,7 @@ def sim_mat(anime_full, ver='basic'):
     else:
         return 'Please Select basic, genre, or adv for ver'
 
-def find_id(anime_full, keyword, media_type):
+def find_id(anime_map, keyword, media_type):
     '''
     Helper function to help the user find the anime_id for a specific anime using
     keyword search.
@@ -81,7 +81,7 @@ def find_id(anime_full, keyword, media_type):
     dataframe containing the anime_id, anime_title(Japanese), anime_title(English), 
     and media_type of results matching the keyword search
     '''
-    anime_map = anime_full[['anime_id','name','title_english', 'type']]
+    # anime_map = anime_full[['anime_id','name','title_english', 'type']]
     # media_type = input('Please select Movie, TV, or Both:').title()
     # keyword = input('Enter title keywords here to search:').title()
     keyword_search_name = anime_map['name'].str.contains(keyword)==True
@@ -99,7 +99,7 @@ def find_id(anime_full, keyword, media_type):
         result = 'Incorrect media type, please select from Movie, TV, or Both'
     return result
 
-def content_based(anime_full, simp_df):
+def content_based(anime_id, anime_map, simp_df):
     '''
     Content based recommender system
     
@@ -112,28 +112,29 @@ def content_based(anime_full, simp_df):
     similarities between animes. Dataframe will contain anime_id, anime_title(Japanese), 
     anime_title(English), and media_type
     '''
-    anime_map = anime_full[['anime_id','name','title_english', 'type']]
-    anime_id = int(input('Find Your Favorite Anime Below, and paste the ID:'))
+    # anime_map = anime_full[['anime_id','name','title_english', 'type']]
+    # anime_id = int(input('Find Your Favorite Anime Below, and paste the ID:'))
     media_type = anime_map[anime_map['anime_id']==anime_id]['type'].values
     anime_name = anime_map[anime_map['anime_id']==anime_id]['name'].values
-    print(f'{anime_name}: {media_type}')
+    anime_eng = anime_map[anime_map['anime_id']==anime_id]['title_english'].values
+    # print(f'{anime_name}: {media_type}')
     if media_type == 'Movie':
         type_ids = anime_map[anime_map['type']=='Movie']['anime_id']
         rec_ids = simp_df.loc[anime_id,simp_df.columns.isin(type_ids)].sort_values(ascending=False)[1:11].index
-        print('Based On the anime referenced, you would enjoy:')
-        return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
+        # print('Based On the anime referenced, you would enjoy:')
+        return anime_name, media_type, anime_eng, anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
     elif media_type == 'TV' or media_type == 'OVA' or media_type == 'ONA':
         ova = anime_map['type']=='OVA'
         ona = anime_map['type']=='ONA'
         tv = anime_map['type']=='TV'
         type_ids = anime_map[(ova) | (ona) | (tv)]['anime_id']
         rec_ids = simp_df.loc[anime_id,simp_df.columns.isin(type_ids)].sort_values(ascending=False)[1:11].index
-        print('Based On the anime referenced, you would enjoy:')
-        return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
+        # print('Based On the anime referenced, you would enjoy:')
+        return anime_name, media_type, anime_eng, anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
     else:
         rec_ids = simp_df.loc[anime_id,:].sort_values(ascending=False)[1:11].index
-        print('Based On the anime referenced, you would enjoy:')
-        return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')[1:11]
+        # print('Based On the anime referenced, you would enjoy:')
+        return anime_name, media_type, anime_eng, anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')[1:11]
 
 def popularity_rec(anime_full):
     '''
@@ -194,3 +195,17 @@ def pred_user_rating(rating_df, sim_mat, user_id, anime_id):
     sims = sim_mat_red.iloc[sim_mat_red.index==anime_id, :].values
     pred_rating = np.sum(ratings*sims)/np.sum(sims)
     return pred_rating
+
+def other_users(anime_id, otherusers_df,yourrecs_df, anime_map):
+    similar_users = otherusers_df[otherusers_df['anime_id']==anime_id]['user_id'].values
+    userpicks_df = yourrecs_df[yourrecs_df['user_id'].isin(similar_users)]
+    avg_rating = userpicks_df.groupby('anime_id').mean()['rating']
+    count_rating = userpicks_df.groupby('anime_id').count()['rating']
+    user_recs_joined = pd.DataFrame([avg_rating,count_rating],columns=avg_rating.index, index=['avg_rating','count_rating']).T
+    user_recs_joined['weighted_avg'] = weighted_rating(user_recs_joined,'count_rating', 'avg_rating')
+    top_anime_recs = user_recs_joined.sort_values(['count_rating','weighted_avg'])[:10].index
+    return anime_map[anime_map['anime_id'].isin(top_anime_recs)]
+
+def user_rec(user_id, yourrecs_df, anime_map):
+    your_picks = yourrecs_df[yourrecs_df['user_id']==user_id]['anime_id'].values
+    return anime_map[anime_map['anime_id'].isin(your_picks)]
