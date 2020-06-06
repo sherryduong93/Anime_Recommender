@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %} Anime Page{% endblock %}
+{% block content %}
+<form action="#" method="post">
+    <p><input type="text" placeholder="Enter the anime_id of your favorite anime here:" name="id" size="50"/></p>
+    <p><input type="submit" value="Search" name='search'/></p>
+</form>
+<button type="button" onclick="window.location.href='{{ url_for( 'home' , table='Y' ) }}';">Need Help Finding The Anime_ID?</button>
+{% endblock %}

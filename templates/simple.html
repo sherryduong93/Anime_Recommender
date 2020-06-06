@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %} Recommendations {% endblock %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h4>{{anime_eng, anime_name, media_type}}</h4>
+<h3>Based on your selection, you may enjoy:</h3>
+{% for table in content_based %}
+            {{titles_CB[loop.index]}}
+            {{ table|safe }}
+{% endfor %}
+<br>
+<h3>Other Users who liked this anime also liked:</h3>
+{% for item in collab_filt %}
+            {{titles_CF[loop.index]}}
+            {{ item|safe }}
+{% endfor %}
+{% endblock %}
+</body>
+</html>

@@ -69,7 +69,7 @@ def sim_mat(anime_full, ver='basic'):
     else:
         return 'Please Select basic, genre, or adv for ver'
 
-def find_id(anime_full):
+def find_id(anime_full, keyword, media_type):
     '''
     Helper function to help the user find the anime_id for a specific anime using
     keyword search.
@@ -82,8 +82,8 @@ def find_id(anime_full):
     and media_type of results matching the keyword search
     '''
     anime_map = anime_full[['anime_id','name','title_english', 'type']]
-    media_type = input('Please select Movie, TV, or Both:').title()
-    keyword = input('Enter title keywords here to search:').title()
+    # media_type = input('Please select Movie, TV, or Both:').title()
+    # keyword = input('Enter title keywords here to search:').title()
     keyword_search_name = anime_map['name'].str.contains(keyword)==True
     keyword_search_eng = anime_map['title_english'].str.contains(keyword)==True
     if media_type == 'Both':
@@ -119,7 +119,7 @@ def content_based(anime_full, simp_df):
     print(f'{anime_name}: {media_type}')
     if media_type == 'Movie':
         type_ids = anime_map[anime_map['type']=='Movie']['anime_id']
-        rec_ids = rec_ids = simp_df.iloc[simp_df.index==anime_id,simp_df.columns.isin(type_ids)].T.sort_values(by=anime_id, ascending=False)[1:11].index
+        rec_ids = simp_df.loc[anime_id,simp_df.columns.isin(type_ids)].sort_values(ascending=False)[1:11].index
         print('Based On the anime referenced, you would enjoy:')
         return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
     elif media_type == 'TV' or media_type == 'OVA' or media_type == 'ONA':
@@ -127,11 +127,11 @@ def content_based(anime_full, simp_df):
         ona = anime_map['type']=='ONA'
         tv = anime_map['type']=='TV'
         type_ids = anime_map[(ova) | (ona) | (tv)]['anime_id']
-        rec_ids = simp_df.iloc[simp_df.index==anime_id,simp_df.columns.isin(type_ids)].T.sort_values(by=anime_id, ascending=False)[1:11].index
+        rec_ids = simp_df.loc[anime_id,simp_df.columns.isin(type_ids)].sort_values(ascending=False)[1:11].index
         print('Based On the anime referenced, you would enjoy:')
         return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')
     else:
-        rec_ids = simp_df.iloc[simp_df.index==anime_id,:].T.sort_values(by=anime_id, ascending=False)[1:11].index
+        rec_ids = simp_df.loc[anime_id,:].sort_values(ascending=False)[1:11].index
         print('Based On the anime referenced, you would enjoy:')
         return anime_map[anime_map['anime_id'].isin(rec_ids)].set_index('anime_id')[1:11]
 
@@ -174,7 +174,7 @@ def popularity_rec(anime_full):
     else:
         return result
 
-def pred_user_rating(rating_df, sim_mat, utility_mat, user_id, anime_id):
+def pred_user_rating(rating_df, sim_mat, user_id, anime_id):
     '''
     INPUT:
     rating_df: matrix with ratings for each anime and user
@@ -189,7 +189,7 @@ def pred_user_rating(rating_df, sim_mat, utility_mat, user_id, anime_id):
     anime_ids = rating_df[rating_df['user_id']==user_id]['anime_id'].values
     anime_ids2 = anime_ids[anime_ids!=anime_id]
     final_ids = anime_ids2[np.isin(anime_ids2, sim_mat.columns)]
-    ratings = utility_mat.iloc[utility_mat.index==user_id, utility_mat.columns.isin(final_ids)].values
+    ratings = rating_df[(rating_df['user_id']==user_id) & (rating_df['anime_id'].isin(final_ids))]['rating'].values
     sim_mat_red = sim_mat.iloc[:, sim_mat.columns.isin(final_ids)]
     sims = sim_mat_red.iloc[sim_mat_red.index==anime_id, :].values
     pred_rating = np.sum(ratings*sims)/np.sum(sims)

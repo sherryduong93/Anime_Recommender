@@ -151,7 +151,9 @@ Anime: Fruits Basket
 <br>A drawback of using these simple Collaborative Filter System is only using the most popular anime to make recommendations. Next we will look into ALS matrix factorization with Spark in order to use all of the data present.
 
 ## Model Based Collaborative Filtering with Spark ALS
-<br>RMSE: 1.16
+<br>Train RMSE: 1.03
+<br>Validation RMSE: 1.15
+<br>Test RMSE: 1.13
 <br>Spot-Check Results Here:
 
 

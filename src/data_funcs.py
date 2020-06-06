@@ -11,11 +11,11 @@ def import_data():
     return anime_df, rating_df, anime_meta, users_meta
 
 
-def weighted_rating(x,rating_count_col, avg_rating_col):
-    m = x[rating_count_col].quantile(0.80)
-    C = x[avg_rating_col].mean()
-    v = x[rating_count_col]
-    R = x[avg_rating_col]
+def weighted_rating(df,rating_count_col, avg_rating_col):
+    m = df[rating_count_col].quantile(0.80)
+    C = df[avg_rating_col].mean()
+    v = df[rating_count_col]
+    R = df[avg_rating_col]
     # Compute the weighted score
     return (v/(v+m) * R) + (m/(m+v) * C)
 
