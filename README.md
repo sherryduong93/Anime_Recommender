@@ -66,18 +66,19 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 ## Content Based Recommender System:
 **Anime_id Keyword**
 <br>-To help users search for the anime_id desired, a helper function called find_id() in src/model_funcs.py was created, which will return all titles that have the keyword.
-<br>-The exploration of this process is stored in Content_Based.ipynb notebook, while the actually recommendation functions are store in model_funcs.py.
+<br>-The exploration of this process is stored in Content_Based.ipynb notebook, while the actual recommendation functions are store in model_funcs.py.
 <br>**Baseline Content Based Recommender:**
 <br>-Features: Type (Movie, TV, etc.), Source (Manga, Music, Book, etc.), and Rating Type (PG, R, etc.).
 <br>-Similarity Metrics: Tested Cosine Similarity & Correlation.
+<br>-Spot check results: The recommender seems to be recommending popular animes instead of more genre/theme specific.
 <br>RMSE on 50K random samples from test set: 1.362
 <br>RMSE(Cosine):, RMSE(Correlation):
 <br>**Content Based Recommender Iteration 2:**
 <br>-Added dummified genre to the content based model
-<br>-Overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though still not perfect
+<br>-Spot check results: overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though still not perfect
 <br>RMSE on 50K random samples from test set: 1.362, no change from prior, though the recommendations for certain spot checks are vastly different.
 <br>**Content Based Recommender Iteration 3**
-<br><br>-Based on the EDA, some producers/studios have higher ratings overall than others, so I created dummy variables for each of the top 20 studios/producers, but this had no impact on the recommendations.
+<br>-Based on the EDA, some producers/studios have higher ratings overall than others, so I created dummy variables for each of the top 20 studios/producers, but this had no impact on the recommendations.
 <br>-Explored clusters of producers & studios, but as there are many duplicates in multiple clusters, did not think this would be worth exploring.
 <pre>Clusters of Producers:
 <br>0, Bandai Visual, Pink Pineapple, Lantis, Sanrio, Fuji TV
@@ -126,8 +127,8 @@ Feature 0: Action fantasy anime with war themes, Military Genre
 <br>Feature 8: Unclear - mix of everything.
 <br>Feature 9: Supernatural and psychological</pre>
 <br>**Result:** Upon spot-checking a recommendation, the results did not perform as well as KNN. SVD is having trouble recommending the correct genre and is recommending action animes for every attempt. This is similar to what we saw during latent feature exploration with the action genre in nearly every latent feature.
-<br><br> **Ultimately did not proceed with these simple options due to high computational costs, these models were created only with the most popular anime, and the most active users.**
-<br>A drawback of using these simple Collaborative Filter System is only using the most popular anime to make recommendations. Next we will look into ALS matrix factorization with Spark in order to use all of the data present.
+<br><br> **Ultimately did not proceed with these simple options due to high computational costs, these models were created only with the most popular anime, and the most active users. Computation and evaluation would be high.**
+<br>Next we will look into ALS matrix factorization with Spark in order to use all of the data present.
 
 ## Model Based Collaborative Filtering with Spark ALS
 -Lastly, I used Spark's ALS model to fit a collaborative filter based recommender that will recommend anime based on the preferences of other users who liked the anime you provided.
@@ -138,7 +139,7 @@ Feature 0: Action fantasy anime with war themes, Military Genre
 <br>Validation RMSE: 1.15
 <br>Test RMSE on Cross-Validated (and tuned) model: 1.13
 <br>Final Model had 15 latent features.
-<br>**Explore latent features:**
+<br><br>**Explore latent features:**
 <br>Latent features seem to be attempting to separate based on level of maturity and genre, with certain themes (school, sports, etc).
 <br>0: RX/mature
 <br>1: Unclear, mix of random genres, mature
