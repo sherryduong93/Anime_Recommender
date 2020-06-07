@@ -166,9 +166,9 @@ Feature 0: Action fantasy anime with war themes, Military Genre
 <br><img src="images/Recs_MaidSama.png" width="425"/> <img src="images/myanimelist_recs_Maid.png" width="425"/> 
 <br>The Content Based Recommender is recommending similar items to MyAnimeList!
 <br>**Spot-Check: Hunter x Hunter**
-<br><img src="images/Flask_Hunter.png" width="425"/> <img src="images/MAL_Hunter.png" width="425"/> 
-<br> **User Recommendations:**
-<br><img src="images/UserRecs_MaidSama.png" width="425"/> <img src="images/UserRecs_Hunter.png" width="425"/> 
+<br><img src="images/flask_Hunter.png" width="425"/> <img src="images/MAL_Hunter.png" width="425"/> 
+<br> **User Recommendation Example for Hunter x Hunter Anime:**
+![image](images/UserRecs_Hunter.png)
 <br>I suspect some hidden gems in this list!
 
 ## Conclusion, Caveats and Next Steps
