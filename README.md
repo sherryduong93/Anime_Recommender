@@ -10,8 +10,15 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>**To evaluate my efforts:**
 <br>1) Spot check a few instances of the recommender with some hand-selected anime from each genre that I am familiar with. Compare the results against MyAnimeList.net recommendations.
 <br>2) Predict ratings for subset of users (for which ratings data is present), compare the predicted ratings to actual ratings, evaluate using RMSE.
+<br>**Methodology**
+<br>I will be using datasets from Kaggle that have been pre-scraped for the purposes of an anime recommender system.
+<br>Using the anime meta data, I will first create a content based recommender using similarity scores calculated for each anime. I will test both cosine similarity, and correlation similarity metrics, and evaluate my efforts with the RMSE on predicted ratings.
+<br>Then, using the ratings dataset, I will build a collaborative filter based recommender system with Spark's ALS model. My model will also be evaluated using the RMSE.
+<br>I will display both the content based and collaborative filter recommendations for a hybrid approach on a flask application.
 
 ## The Data:
+<br>All data is from Kaggle datasets, scraped from MyAnimeList.net.
+<br>Last updated 2017 & 2018
 <br>**-anime_df**: 12,294 animes with name, genre, type, number of episodes, avg_rating, and members
 <br>**-rating_df**: 7M reviews of 11,200 animes from 73,515 users
 <br>**-anime_meta**: 14,478 animes with additional features: English title, dates aired, duration of anime, rating (PG,G,R, etc.), producer, studio, opening & ending theme songs
@@ -54,25 +61,23 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 
 ## Baseline Model:
 **Use the average rating of the training data to predict user ratings of the test dat**
-<br>RMSE: 1.57
-<br>Using just the average to predict user ratings already gathers pretty decent results. 
+<br>-RMSE: 1.57
+<br>-Using just the average to predict user ratings already gathers pretty decent results. 
 ## Content Based Recommender System:
 **Anime_id Keyword**
 <br>-To help users search for the anime_id desired, a helper function called find_id() in src/model_funcs.py was created, which will return all titles that have the keyword.
+<br>-The exploration of this process is stored in Content_Based.ipynb notebook, while the actually recommendation functions are store in model_funcs.py.
 <br>**Baseline Content Based Recommender:**
-<br>-Features: Type (Movie, TV, etc.), Source (Manga, Music, Book, etc.), Rating Type (PG, R, etc.), and Weighted Rated.
-<br>-Similarity Metrics: Tested Cosine Similarity & Pairwise Distance. Spot-checking a few popular animes in each genre, Pairwise Distance performs the best with genre related recommendations, but is recommending unpopular anime, cosine similarity is recommending the popular anime, but not good at narrowing down to the right genre. 
-<br>Results: (With cosine similarity), looking up recommendations for "Inuyasha"
+<br>-Features: Type (Movie, TV, etc.), Source (Manga, Music, Book, etc.), and Rating Type (PG, R, etc.).
+<br>-Similarity Metrics: Tested Cosine Similarity & Correlation.
 <br>RMSE on 50K random samples from test set: 1.362
-<br><img src="images/Content_Based_Compare_TV1.png" width="425"/> <img src="images/Content_Based_Movie_1.png" width="425"/> 
+<br>RMSE(Cosine):, RMSE(Correlation):
 <br>**Content Based Recommender Iteration 2:**
 <br>-Added dummified genre to the content based model
-<br>-Based on the EDA, some producers/studios have higher ratings overall than others, only the top 20 studios and producers will be captured in the next content based model.
-<br>-Overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though not perfect
+<br>-Overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though still not perfect
 <br>RMSE on 50K random samples from test set: 1.362, no change from prior, though the recommendations for certain spot checks are vastly different.
-<br><img src="images/Content_Based_Compare_TV2.png" width="425"/> <img src="images/Content_Based_Movie2.png" width="425"/> 
 <br>**Content Based Recommender Iteration 3**
-<br>-Adding Studio/Producers had almost no impact on the similarity matrix of the iteration with only genre added.
+<br><br>-Based on the EDA, some producers/studios have higher ratings overall than others, so I created dummy variables for each of the top 20 studios/producers, but this had no impact on the recommendations.
 <br>-Explored clusters of producers & studios, but as there are many duplicates in multiple clusters, did not think this would be worth exploring.
 <pre>Clusters of Producers:
 <br>0, Bandai Visual, Pink Pineapple, Lantis, Sanrio, Fuji TV
@@ -87,55 +92,30 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>3, J.C.Staff, Toei Animation, Sunrise, OLM, Xebec
 <br>4, Toei Animation, Unknown, Nippon Animation, OLM, Tatsunoko Production</pre>
 
-## Simple Collaborative Filter Recommenders with Correlation, KNN & SVD
+## Simple Collaborative Filter Recommenders with KNN & SVD
 **Rating Data Statistics:**
 <br>On average, each user provides 90 ratings, median number of ratings given per user is 45
 <br>On average, each anime has 638 ratings, median number of ratings provided per anime is 57
 ![image](images/rating_count_dist.png)
 <br>For our simple collaborative filter recommenders, we want to recommend the most popular movies from our most active users. I will be removing all users with less than 300 ratings, and all animes with less than 2500 ratings. 
 <br>This leaves us with 4326 users, and 694 anime. This leaves us with 1M reviews.
+<br>The model functions for below KNN/SVD are stored in src/Popular_CollabFilt.py.
 ### KNN Collaborative Filter
-Anime: Fruits Basket
-<br> **Iteration 1: Fill in NaN's with 0:**
+Explored simple KNN & SVD based collaborative filter models, imputing the NaN's with zeros, average per user, and average per rating. The exploration of this process can be viewed in Simple_CF.ipynb.
+<br> **Example from KNN: Fill in NaN's with average anime rating:**
 <pre>Recommendations for 120 ['Fruits Basket']:
-<br>1: ['Ouran Koukou Host Club'], with distance of 0.373222052075192:
-<br>2: ['Chobits'], with distance of 0.4624859112856201:
-<br>3: ['Fullmetal Alchemist'], with distance of 0.4802540588214821:
-<br>4: ['D.N.Angel'], with distance of 0.484765127405153:
-<br>5: ['Vampire Knight'], with distance of 0.4859228901227741:
-<br>6: ['Sen To Chihiro No Kamikakushi'], with distance of 0.4903165145454421:
-<br>7: ['Lovely★Complex'], with distance of 0.4960176951616878:
-<br>8: ['Tsubasa Chronicle'], with distance of 0.49802071811742765:
-<br>9: ['Suzumiya Haruhi No Yuuutsu'], with distance of 0.49827088077896575:
-<br>10: ['Full Metal Panic!'], with distance of 0.4997038875693144:</pre>
-<br>**Iteration 2: Fill in NaN's with average user rating:**
-<pre>Recommendations for 120 ['Fruits Basket']:
-<br>1: ['Skip Beat!'], with distance of 0.373222052075192:
-<br>2: ['Howl No Ugoku Shiro'], with distance of 0.4624859112856201:
-<br>3: ['Absolute Duo'], with distance of 0.4802540588214821:
-<br>4: ['Zoku Natsume Yuujinchou'], with distance of 0.484765127405153:
-<br>5: ['Lovely★Complex'], with distance of 0.4859228901227741:
-<br>6: ['Natsume Yuujinchou'], with distance of 0.4903165145454421:
-<br>7: ['Nodame Cantabile'], with distance of 0.4960176951616878:
-<br>8: ['Natsume Yuujinchou San'], with distance of 0.49802071811742765:
-<br>9: ['Natsume Yuujinchou Shi'], with distance of 0.49827088077896575:
-<br>10: ['Kimi Ni Todoke'], with distance of 0.4997038875693144:</pre>
-<br>**Iteration 3: Fill in NaN's with average anime rating:**
-<pre>Recommendations for 120 ['Fruits Basket']:
-<br>1: ['Ouran Koukou Host Club'], with distance of 0.373222052075192:
-<br>2: ['Vampire Knight'], with distance of 0.4624859112856201:
-<br>3: ['07-Ghost'], with distance of 0.4802540588214821:
-<br>4: ['Lovely★Complex'], with distance of 0.484765127405153:
-<br>5: ['Special A'], with distance of 0.4859228901227741:
-<br>6: ['Vampire Knight Guilty'], with distance of 0.4903165145454421:
-<br>7: ['Kamisama Hajimemashita'], with distance of 0.4960176951616878:
-<br>8: ['Cardcaptor Sakura'], with distance of 0.49802071811742765:
-<br>9: ['Howl No Ugoku Shiro'], with distance of 0.49827088077896575:
-<br>10: ['D.N.Angel'], with distance of 0.4997038875693144:</pre>
-### Exploring simple SVD with inputing the average rating per anime
-### Simple SVD Latent Feature Tagging
-<pre>Not entirely clear the latent features, there are a lot of overlap
-<br>Feature 0: Action fantasy anime with war themes, Military Genre
+<br>1: ['Ouran Koukou Host Club'], with distance of 0.373
+<br>2: ['Vampire Knight'], with distance of 0.462
+<br>3: ['07-Ghost'], with distance of 0.480
+<br>4: ['Lovely★Complex'], with distance of 0.484
+<br>5: ['Special A'], with distance of 0.485
+<br>6: ['Vampire Knight Guilty'], with distance of 0.490
+<br>7: ['Kamisama Hajimemashita'], with distance of 0.496
+<br>8: ['Cardcaptor Sakura'], with distance of 0.498
+<br>9: ['Howl No Ugoku Shiro'], with distance of 0.498
+<br>10: ['D.N.Angel'], with distance of 0.499</pre>
+### Simple SVD (imputing the NaNs with average rating per anime) Latent Features:
+Feature 0: Action fantasy anime with war themes, Military Genre
 <br>Feature 1: Action and Sci-fi, supernatural
 <br>Feature 2: Not clear, some comedies, romance, action, video game military
 <br>Feature 3: Not clear - Action horror sci-fi, A-1 studio
@@ -145,17 +125,21 @@ Anime: Fruits Basket
 <br>Feature 7: Slice of life or romance, comedy, school
 <br>Feature 8: Unclear - mix of everything.
 <br>Feature 9: Supernatural and psychological</pre>
-<br>**Result:**
-![image](images/SimpleSVD_FruitBasket.png)
-<br>Upon initial inspection, the results did not perform as well as KNN. SVD is having trouble recommending the correct genre and is recommending action animes for every attempt. This is similar to the result we saw in the latent feature exploration with a lot of overlap with action in nearly every latent feature.
+<br>**Result:** Upon spot-checking a recommendation, the results did not perform as well as KNN. SVD is having trouble recommending the correct genre and is recommending action animes for every attempt. This is similar to what we saw during latent feature exploration with the action genre in nearly every latent feature.
+<br><br> **Ultimately did not proceed with these simple options due to high computational costs, these models were created only with the most popular anime, and the most active users.**
 <br>A drawback of using these simple Collaborative Filter System is only using the most popular anime to make recommendations. Next we will look into ALS matrix factorization with Spark in order to use all of the data present.
 
 ## Model Based Collaborative Filtering with Spark ALS
+-Lastly, I used Spark's ALS model to fit a collaborative filter based recommender that will recommend anime based on the preferences of other users who liked the anime you provided.
+<br>-Basline hyper-parameters: cold-start strategy: drop, 10 latent features, 20 max iterations and 0.1 regularization, this gave me a validation RMSE of 0.13. I then used ALS model's cross validator estimator to tune the model.
+<br>-Functions for this recommender are stored in src/als_collab_filt.py, and tuning of the model is stored in ALS_tuning.ipynb. Tuning of the model was done on AWS Sagemaker.
+<br> **Results**
 <br>Train RMSE: 1.03
 <br>Validation RMSE: 1.15
 <br>Test RMSE on Cross-Validated (and tuned) model: 1.13
 <br>Final Model had 15 latent features.
-<br>Explore latent features:
+<br>**Explore latent features:**
+<br>Latent features seem to be attempting to separate based on level of maturity and genre, with certain themes (school, sports, etc).
 <br>0: RX/mature
 <br>1: Unclear, mix of random genres, mature
 <br>2: Action/Adventure
@@ -171,12 +155,21 @@ Anime: Fruits Basket
 <br>12: Sports, action, slice of life, sci-fi
 <br>13: Music/drama
 <br>14: Mature content with sports theme 
-<br>Has majority of genre in each latent feature, with random sprinkles that don't seem to match
-<br>Spot-Check Results Here:
+<br><br> **Spot-Check Results:** 
+<br>Upon spot-checking a few familiar anime, the recommendations from other users consist of some anime that is not so well know. When I searched a description of that anime, it seemed to match very well with the anime searched. I will definitely be testing out some of these recommendations to find my next anime!
 
-
-**Flash App**
--Use the anime_full['image_url'] column which has links to all anime photos, checked out url and it did not, but try later
+**Flask App: Find Your Next Anime!**
+<br>Welcome Page & Recommender Page:
+![image](images/flask_welcome.png)
+![image](images/flask_search.png)
+<br>**Spot-Checking Some Results - Maid Sama:**
+<br><img src="images/Recs_MaidSama.png" width="425"/> <img src="images/myanimelist_recs_Maid.png" width="425"/> 
+<br>The Content Based Recommender is recommending similar items to MyAnimeList!
+<br>**Spot-Check: Hunter x Hunter**
+<br><img src="images/Flask_Hunter.png" width="425"/> <img src="images/MAL_Hunter.png" width="425"/> 
+<br> **User Recommendations:**
+<br><img src="images/UserRecs_MaidSama.png" width="425"/> <img src="images/UserRecs_Hunter.png" width="425"/> 
+<br>I suspect some hidden gems in this list!
 
 ## Conclusion, Caveats and Next Steps
 -Recommender system performance is notoriously hard to quantify. 
@@ -189,7 +182,7 @@ Anime: Fruits Basket
 
 ### Data Sources:
 Anime & user metadata from : https://www.kaggle.com/azathoth42/myanimelist
-Anime and rating data from: https://www.kaggle.com/CooperUnion/anime-recommendations-database
+<br>Anime and rating data from: https://www.kaggle.com/CooperUnion/anime-recommendations-database
 
 
 

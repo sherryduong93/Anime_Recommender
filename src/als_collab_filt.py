@@ -76,11 +76,11 @@ class Anime_RecommenderCF():
 
 
 
-# rec = Anime_RecommenderCF()
-# rec.fit(train)
+rec = Anime_RecommenderCF()
+rec.fit(train)
 
-# anime_id = int(input('enter anime ID of interest here'))
-# user_id = int(input('enter user ID of interest here'))
+anime_id = int(input('enter anime ID of interest here'))
+user_id = int(input('enter user ID of interest here'))
 
-# rec.other_user_recs(anime_id, anime_map)
-# rec.user_rec(user_id,anime_map)
+rec.other_user_recs(anime_id, anime_map)
+rec.user_rec(user_id,anime_map)
