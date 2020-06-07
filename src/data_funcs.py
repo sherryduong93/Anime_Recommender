@@ -49,6 +49,12 @@ def full_anime_df(rating_df, anime_df, anime_meta):
     #Formatting the anime titles
     anime_full['name'] = anime_full['name'].str.title()
     anime_full['title_english'] = anime_full['title_english'].str.title()
+
+    #Getting the correct amime photo url
+    anime_full['image_url'] = anime_full['image_url'].fillna(0)
+    str_needed = 'https://cdn.myanimelist.net/images'
+    anime_full['image_url'] = anime_full['image_url'].transform(lambda x: 'NA' if x==0 else str_needed+x.split('/images')[1])
+    anime_full['image_url'] = anime_full['image_url'].transform(lambda x: f'<img src="{x}" alt="flowers" style="width:100px;height:150px;">') #convert to html
     return anime_full
 
 def explode_text(anime_full):

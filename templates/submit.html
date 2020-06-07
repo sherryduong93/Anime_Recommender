@@ -2,7 +2,8 @@
 {% block title %} Anime Page{% endblock %}
 {% block content %}
 <center>
-    <!-- <img src="https://i.ytimg.com/vi/RLXzQb57obs/maxresdefault.jpg" width="825"/>  -->
+    <h1> Welcome!</h1>
+    <p>To find your next anime, search for your favorite anime using the form below, or click "Take me to the recommender" if you already know the appropriate anime_id.</p>
     <br>
     <button style="background-color: maroon; color: white;" type="button" onclick="window.location.href='{{ url_for( 'engine' , table='Y' ) }}';">Take me to the recommender!</button>
     <br><br>
@@ -13,5 +14,6 @@
         <p><input type="text" placeholder="Search for Title Keyword:" name="kw" size="50"/></p>
         <p><input type="submit" value="Search" name='search' style="background-color: black; color: white;"/></p>
     </form>
+    <br>
 </center>
 {% endblock %}
