@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 {% block title %} Anime Page{% endblock %}
 {% block content %}
-<button type="button" onclick="window.location.href='{{ url_for( 'engine' , table='Y' ) }}';">Take me to the recommender!</button>
-<br><br>
-<form action="#" method="post" name="help">
-    <p>Need Help Finding the Correct Anime ID?</p>
-    <p><input type="text" placeholder="Select: Movie, TV, or Both:" name="mt" size="50"/></p>
-    <p><input type="text" placeholder="Search for Title Keyword:" name="kw" size="50"/></p>
-    <p><input type="submit" value="Search" name='search'/></p>
-</form>
+<center>
+    <!-- <img src="https://i.ytimg.com/vi/RLXzQb57obs/maxresdefault.jpg" width="825"/>  -->
+    <br>
+    <button style="background-color: maroon; color: white;" type="button" onclick="window.location.href='{{ url_for( 'engine' , table='Y' ) }}';">Take me to the recommender!</button>
+    <br><br>
+    <h1>{{ content }}</h1>
+    <form action="#" method="post" name="help">
+        <p style="background-color: white; font-weight: bold;">Need Help Finding the Correct Anime ID?</p>
+        <p><input type="text" placeholder="Select: Movie, TV, or Both:" name="mt" size="50"/></p>
+        <p><input type="text" placeholder="Search for Title Keyword:" name="kw" size="50"/></p>
+        <p><input type="submit" value="Search" name='search' style="background-color: black; color: white;"/></p>
+    </form>
+</center>
 {% endblock %}

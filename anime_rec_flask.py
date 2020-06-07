@@ -9,6 +9,9 @@ anime_df, rating_df, anime_meta, users_meta = import_data()
 anime_full = full_anime_df(rating_df, anime_df, anime_meta)
 anime_map = anime_full[['anime_id','name','title_english', 'type']]
 simp_df = sim_mat(anime_full, ver='genre')
+# Actual url https://https://cdn.myanimelist.net/images/anime/13/80000.jpg
+# Dataset url https://myanimelist.cdn-dena.com/images/anime/13/80000.jpg
+
 
 otherusers_df = pd.read_csv('model/otherusers_rec2.csv').drop(columns=['Unnamed: 0']) #Use rec2 for 50 users, rec for 10
 yourrecs_df = pd.read_csv('model/your_recs2.csv').drop(columns=['Unnamed: 0']) #Use rec2 for 50 users, rec for 10
@@ -22,6 +25,8 @@ def home():
     if request.method == "POST":
         media_type1 = request.form["mt"].title()
         keyword1 = request.form["kw"].title()
+        if media_type1 == "" or keyword1 == "":
+            return redirect(url_for("home", content="Please fill out the form."))
         return redirect(url_for("search", media_type=media_type1, keyword=keyword1))
     else:
         return render_template("submit.html")

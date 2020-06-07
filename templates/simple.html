@@ -7,18 +7,32 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<h4>{{anime_eng, anime_name, media_type}}</h4>
-<h3>Based on your selection, you may enjoy:</h3>
-{% for table in content_based %}
-            {{titles_CB[loop.index]}}
+    <center>
+        <h4>Anime Selected: {{anime_eng, anime_name, media_type}}</h4>
+        <h3 style="background-color: maroon; color: white;">Based on your selection, you may enjoy:</h3>
+
+        <div class=page>
+            {% for table in content_based %}
+        <!-- {{titles_CB[loop.index]}} -->
             {{ table|safe }}
-{% endfor %}
-<br>
-<h3>Other Users who liked this anime also liked:</h3>
-{% for item in collab_filt %}
-            {{titles_CF[loop.index]}}
-            {{ item|safe }}
-{% endfor %}
-{% endblock %}
+            {% endfor %}
+        </div>
+        <br>
+        <h3 style="background-color: maroon; color: white;">Other users who liked this anime also liked:</h3>
+        <table style="background-color: #ff0000;">{% for item in collab_filt %}
+                    <!-- {{titles_CF[loop.index]}} -->
+                    {{ item|safe }}
+        {% endfor %}</table>
+        <br><br>
+        {% endblock %}
+    </center>
 </body>
 </html>
+
+<div class=page>
+    <h1>Surfer groups</h1>
+    {% for table in tables %}
+      <h2>{{titles[loop.index]}}</h2>
+      {{ table|safe }}
+    {% endfor %}
+  </div>

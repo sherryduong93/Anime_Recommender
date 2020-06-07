@@ -153,7 +153,25 @@ Anime: Fruits Basket
 ## Model Based Collaborative Filtering with Spark ALS
 <br>Train RMSE: 1.03
 <br>Validation RMSE: 1.15
-<br>Test RMSE: 1.13
+<br>Test RMSE on Cross-Validated (and tuned) model: 1.13
+<br>Final Model had 15 latent features.
+<br>Explore latent features:
+<br>0: RX/mature
+<br>1: Unclear, mix of random genres, mature
+<br>2: Action/Adventure
+<br>3: Dementia, fantasy, sci-fi, magic
+<br>4: Unclear, random mix of everything
+<br>5: Rated G, comedy, kids
+<br>6: Romance, Yaoi
+<br>7: Supernatural, PG-13 & G, adventure, sci-fi
+<br>8: Fantasy, action, PG-13 & G
+<br>9: Comedy, romance, drama & school PG-13 & G
+<br>10: Super natural, superpower, action, sci-fi PG-13 & G
+<br>11: Horror, dementia, mature content with random kids content
+<br>12: Sports, action, slice of life, sci-fi
+<br>13: Music/drama
+<br>14: Mature content with sports theme 
+<br>Has majority of genre in each latent feature, with random sprinkles that don't seem to match
 <br>Spot-Check Results Here:
 
 
