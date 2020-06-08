@@ -174,7 +174,7 @@ Recommendations for 120 ['Fruits Basket']:
 
 ## Flask App: Your Anime Match Maker!
 <br>App Demo:<br>
-![image](images/app-demo.gif)
+![image](images/app-demo2.gif)
 
 * On the Recommeder page, you can view the most popular anime, or filter to the most popular anime for specific genre.
 * If you already have an anime that you enjoyed in the past, you can locate the anime_id with the search page, or paste the anime_id into the form to get recommendations.
