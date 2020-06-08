@@ -57,7 +57,7 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 -Not a big difference between different sources
 ![image](images/ratings_per_source.png)
 -Comparing different genres, there are some genres that do much better/worse than majority.
-![image](images/ratings_per_genre1.png)
+![image](images/rating_by_genre.png)
 -Comparing the top 20 studios and producers, there are clear studios that are more highly rated by users.
 <br><img src="images/ratings_per_studio.png" width="425"/> <img src="images/ratings_per_producers.png" width="425"/> 
 
