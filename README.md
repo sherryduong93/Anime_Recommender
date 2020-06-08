@@ -76,8 +76,9 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * Features: Type (Movie, TV, etc.), Source (Manga, Music, Book, etc.), and Rating Type (PG, R, etc.).
 * Similarity Metrics: Tested Cosine Similarity & Correlation.
 * Spot check results: The recommender seems to be recommending popular animes instead of more genre/theme specific.
-* RMSE on 50K random samples from test set: 1.362
-* RMSE(Cosine):, RMSE(Correlation):
+* RMSE (Cosine Similarity on 100K subset of test): 1.35
+* RMSE (Correlation on 100K subset of test): 1.49 
+* RMSE on 200K from test set: 1.347
 
 **Content Based Recommender Iteration 2:**
 * Added dummified genre to the content based model
