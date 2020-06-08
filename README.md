@@ -45,7 +45,7 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * The function for performing this operation is the explode_text() function in src/data.py.
 
 ## EDA
-**Comparing the average rating to the weighted ratings**
+**Comparing the average rating to the weighted ratings** The code for this can be found in Notebooks/EDA.ipynb.
 * avg_rating from the anime dataset: 6.473902
 * weighted_rating average from the anime dataset: 6.654531
 * Average ratings from the user rating dataset: 7.8
@@ -70,7 +70,7 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 ## Content Based Recommender System:
 **Anime_id Keyword**
 * To help users search for the anime_id desired, a helper function called find_id() in src/model_funcs.py was created, which will return all titles that have the keyword.
-* The exploration of this process is stored in Content_Based.ipynb notebook, while the actual recommendation functions are store in model_funcs.py.
+* The exploration of this process is stored in Notesbooks/Content_Based.ipynb, while the actual recommendation functions are store in model_funcs.py.
 
 **Baseline Content Based Recommender:**
 * Features: Type (Movie, TV, etc.), Source (Manga, Music, Book, etc.), and Rating Type (PG, R, etc.).
@@ -111,7 +111,7 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>This leaves us with 4326 users, and 694 anime. This leaves us with 1M reviews.
 <br>The model functions for below KNN/SVD are stored in src/Popular_CollabFilt.py.
 ### KNN Collaborative Filter
-Explored simple KNN & SVD based collaborative filter models, imputing the NaN's with zeros, average per user, and average per rating. The exploration of this process can be viewed in Simple_CF.ipynb.
+Explored simple KNN & SVD based collaborative filter models, imputing the NaN's with zeros, average per user, and average per rating. The exploration of this process can be viewed in Notebooks/Simple_CF.ipynb.
 <br> **Example from KNN: Fill in NaN's with average anime rating:**
 Recommendations for 120 ['Fruits Basket']:
 > - 1: ['Ouran Koukou Host Club'], with distance of 0.373
@@ -143,7 +143,7 @@ Recommendations for 120 ['Fruits Basket']:
 ## Model Based Collaborative Filtering with Spark ALS
 * Lastly, I used Spark's ALS model to fit a collaborative filter based recommender that will recommend anime based on the preferences of other users who liked the anime you provided.
 * Basline hyper-parameters: cold-start strategy: drop, 10 latent features, 20 max iterations and 0.1 regularization, this gave me a validation RMSE of 1.13. I then used ALS model's cross validator estimator to tune the model.
-* Functions for this recommender are stored in src/als_collab_filt.py, and tuning of the model is stored in ALS_tuning.ipynb. Tuning of the model was done on AWS Sagemaker.
+* Functions for this recommender are stored in src/als_collab_filt.py, and tuning of the model is stored in Notebooks/ALS_tuning.ipynb. Tuning of the model was done on AWS Sagemaker.
 
 **Results**
 * Train RMSE: 1.03
@@ -186,6 +186,7 @@ Recommendations for 120 ['Fruits Basket']:
 <br><img src="images/flask_Hunter.png" width="425"/> <img src="images/MAL_Hunter.png" width="425"/> 
 * The Content Based Recommender is recommending similar items to MyAnimeList for both anime.
 * For recommendations from other users, I suspect some hidden gems in this list!
+* At this time, due to computational needs for the app, it is not deployed just yet. But will be coming soon!
 
 ## Conclusion, Caveats and Next Steps
 * Due to computational/time constraints, I was not able to evaluate my content based recommender using all of the test day to get true evaluation.
