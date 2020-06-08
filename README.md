@@ -175,12 +175,10 @@ Explored simple KNN & SVD based collaborative filter models, imputing the NaN's 
 ![image](images/flask_search.png)
 <br>**Spot-Checking Some Results - Maid Sama:**
 <br><img src="images/Recs_MaidSama.png" width="425"/> <img src="images/myanimelist_recs_Maid.png" width="425"/> 
-<br>The Content Based Recommender is recommending similar items to MyAnimeList!
 <br>**Spot-Check: Hunter x Hunter**
 <br><img src="images/flask_Hunter.png" width="425"/> <img src="images/MAL_Hunter.png" width="425"/> 
-<br> **User Recommendation Example for Hunter x Hunter Anime:**
-![image](images/UserRecs_Hunter.png)
-<br>I suspect some hidden gems in this list!
+<br>The Content Based Recommender is recommending similar items to MyAnimeList for both anime.
+<br>For recommendations from other users, I suspect some hidden gems in this list!
 
 ## Conclusion, Caveats and Next Steps
 * Recommender system performance is notoriously hard to quantify. 

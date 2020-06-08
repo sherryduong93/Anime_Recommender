@@ -6,7 +6,7 @@ def import_data():
     rating_df = pd.read_csv('data/rating.csv')
     #Remove the -1's, which are no values for the ratings
     rating_df = rating_df[rating_df['rating']!=-1]
-    anime_meta = pd.read_csv('data/AnimeList_meta.csv')
+    anime_meta = pd.read_csv('data/AnimeList_Meta.csv')
     users_meta = pd.read_csv('data/UserList_Meta.csv')
     return anime_df, rating_df, anime_meta, users_meta
 
