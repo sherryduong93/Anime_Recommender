@@ -79,6 +79,7 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * RMSE (Cosine Similarity on 100K subset of test): 1.35
 * RMSE (Correlation on 100K subset of test): 1.49 
 * RMSE on 300K from test set: 1.347
+**Due to computational/time constraints, was unable to evaluate on the entire test set, will continue trying and update accordingly as more results surface**
 
 **Content Based Recommender Iteration 2:**
 * Added dummified genre to the content based model, continued with cosine similarity
@@ -147,7 +148,7 @@ Recommendations for 120 ['Fruits Basket']:
 **Results**
 * Train RMSE: 1.03
 * Validation RMSE: 1.15
-* Test RMSE on same test-size as content based (50K & 10%): 1.133
+* Test RMSE on same test-size as content based (300K): 1.133
 * Test RMSE on Cross-Validated (and tuned) model: 1.13
 
 **Final tuned ALS model had 15 latent features**
@@ -187,6 +188,7 @@ Recommendations for 120 ['Fruits Basket']:
 * For recommendations from other users, I suspect some hidden gems in this list!
 
 ## Conclusion, Caveats and Next Steps
+* Due to computational/time constraints, I was not able to evaluate my content based recommender using all of the test day to get true evaluation.
 * Recommender system performance is notoriously hard to quantify. 
 * Spot-checking a few instances is not enough to evaluate the entire model, and can be subjective depending on the user. 
 * The RMSE is not an exact measure either, since the ultimate success of the project is to provide the most useful recommendations to users.
