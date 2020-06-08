@@ -173,8 +173,8 @@ Recommendations for 120 ['Fruits Basket']:
 <br>Upon spot-checking a few familiar anime, the recommendations from other users consist of some anime that is not so well know. When I searched a description of that anime, it seemed to match very well with the anime searched. I will definitely be testing out some of these recommendations to find my next anime!
 
 ## Flask App: Your Anime Match Maker!
-<br>Recommender Page:
-![image](images/flask_search.png)
+<br>App Demo:<br>
+![image](images/app-demo.gif)
 
 * On the Recommeder page, you can view the most popular anime, or filter to the most popular anime for specific genre.
 * If you already have an anime that you enjoyed in the past, you can locate the anime_id with the search page, or paste the anime_id into the form to get recommendations.
