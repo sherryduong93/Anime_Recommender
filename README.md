@@ -173,11 +173,11 @@ Explored simple KNN & SVD based collaborative filter models, imputing the NaN's 
 
 ## Flask App: Find Your Next Anime!
 <br>Recommender Page:
-![image](images/flask_search1.png)
+![image](images/flask_search.png)
 <br>**Spot-Checking Some Results - Maid Sama:**
-<br><img src="images/Recs_MaidSama1.png" width="425"/> <img src="images/myanimelist_recs_Maid.png" width="425"/> 
+<br><img src="images/Recs_MaidSama.png" width="425"/> <img src="images/myanimelist_recs_Maid.png" width="425"/> 
 <br>**Spot-Check: Hunter x Hunter**
-<br><img src="images/flask_Hunter1.png" width="425"/> <img src="images/MAL_Hunter.png" width="425"/> 
+<br><img src="images/flask_Hunter.png" width="425"/> <img src="images/MAL_Hunter.png" width="425"/> 
 <br>The Content Based Recommender is recommending similar items to MyAnimeList for both anime.
 <br>For recommendations from other users, I suspect some hidden gems in this list!
 
