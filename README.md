@@ -9,7 +9,7 @@
   * [Content based filtering](#content-based-recommender-system)
   * [Simple Collaborative filtering](#simple-collaborative-filtering)
   * [Collaborative filtering](#model-based-collaborative-filtering-with-spark-als)
-* [Find Your Next Anime!](#flask-app-find-your-next-anime)
+* [Find Your Next Anime!](#flask-app-your-anime-match-maker)
 * [Conclusion, Caveats and Next Steps](#conclusion-caveats-and-next-steps)
 
 ## Motivations and Goals
@@ -78,12 +78,12 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * Spot check results: The recommender seems to be recommending popular animes instead of more genre/theme specific.
 * RMSE (Cosine Similarity on 100K subset of test): 1.35
 * RMSE (Correlation on 100K subset of test): 1.49 
-* RMSE on 200K from test set: 1.347
+* RMSE on 300K from test set: 1.347
 
 **Content Based Recommender Iteration 2:**
-* Added dummified genre to the content based model
+* Added dummified genre to the content based model, continued with cosine similarity
 * Spot check results: overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though still not perfect
-* RMSE on 50K random samples from test set: 1.362, no change from prior, though the recommendations for certain spot checks are vastly different.
+* RMSE on 100K random samples from test set: 1.31, slight improvement on RMSE, although the recommendations for certain spot checks are much better in my subjective review.
 
 **Content Based Recommender Iteration 3**
 * Based on the EDA, some producers/studios have higher ratings overall than others, so I created dummy variables for each of the top 20 studios/producers, but this had no impact on the recommendations.
@@ -112,17 +112,17 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 ### KNN Collaborative Filter
 Explored simple KNN & SVD based collaborative filter models, imputing the NaN's with zeros, average per user, and average per rating. The exploration of this process can be viewed in Simple_CF.ipynb.
 <br> **Example from KNN: Fill in NaN's with average anime rating:**
-<pre>Recommendations for 120 ['Fruits Basket']:
-<br>1: ['Ouran Koukou Host Club'], with distance of 0.373
-<br>2: ['Vampire Knight'], with distance of 0.462
-<br>3: ['07-Ghost'], with distance of 0.480
-<br>4: ['Lovely★Complex'], with distance of 0.484
-<br>5: ['Special A'], with distance of 0.485
-<br>6: ['Vampire Knight Guilty'], with distance of 0.490
-<br>7: ['Kamisama Hajimemashita'], with distance of 0.496
-<br>8: ['Cardcaptor Sakura'], with distance of 0.498
-<br>9: ['Howl No Ugoku Shiro'], with distance of 0.498
-<br>10: ['D.N.Angel'], with distance of 0.499</pre>
+Recommendations for 120 ['Fruits Basket']:
+> - 1: ['Ouran Koukou Host Club'], with distance of 0.373
+> - 2: ['Vampire Knight'], with distance of 0.462
+> - 3: ['07-Ghost'], with distance of 0.480
+> - 4: ['Lovely★Complex'], with distance of 0.484
+> - 5: ['Special A'], with distance of 0.485
+> - 6: ['Vampire Knight Guilty'], with distance of 0.490
+> - 7: ['Kamisama Hajimemashita'], with distance of 0.496
+> - 8: ['Cardcaptor Sakura'], with distance of 0.498
+> - 9: ['Howl No Ugoku Shiro'], with distance of 0.498
+> - 10: ['D.N.Angel'], with distance of 0.499
 ### Simple SVD (imputing the NaNs with average rating per anime) Latent Features:
 > - Feature 0: Action fantasy anime with war themes, Military Genre
 > - Feature 1: Action and Sci-fi, supernatural
@@ -171,15 +171,20 @@ Explored simple KNN & SVD based collaborative filter models, imputing the NaN's 
 **Spot-Check Results:** 
 <br>Upon spot-checking a few familiar anime, the recommendations from other users consist of some anime that is not so well know. When I searched a description of that anime, it seemed to match very well with the anime searched. I will definitely be testing out some of these recommendations to find my next anime!
 
-## Flask App: Find Your Next Anime!
+## Flask App: Your Anime Match Maker!
 <br>Recommender Page:
 ![image](images/flask_search.png)
+
+* On the Recommeder page, you can view the most popular anime, or filter to the most popular anime for specific genre.
+* If you already have an anime that you enjoyed in the past, you can locate the anime_id with the search page, or paste the anime_id into the form to get recommendations.
+* On the recommendations page (below) you will receive 20 recommendations based on similarity to the specified anime, and 20 recommendations based on other user preferences.
+
 <br>**Spot-Checking Some Results - Maid Sama:**
 <br><img src="images/Recs_MaidSama.png" width="425"/> <img src="images/myanimelist_recs_Maid.png" width="425"/> 
 <br>**Spot-Check: Hunter x Hunter**
 <br><img src="images/flask_Hunter.png" width="425"/> <img src="images/MAL_Hunter.png" width="425"/> 
-<br>The Content Based Recommender is recommending similar items to MyAnimeList for both anime.
-<br>For recommendations from other users, I suspect some hidden gems in this list!
+* The Content Based Recommender is recommending similar items to MyAnimeList for both anime.
+* For recommendations from other users, I suspect some hidden gems in this list!
 
 ## Conclusion, Caveats and Next Steps
 * Recommender system performance is notoriously hard to quantify. 
@@ -188,7 +193,8 @@ Explored simple KNN & SVD based collaborative filter models, imputing the NaN's 
 
 **Next Steps**
 * Popularity recommender specific to genre and content type specified.
-* Scrape description of each anime to display with the recommendations. NLP with the descriptions to improve results further.
+* Scrape description of each anime to display with the recommendations. 
+* NLP with the descriptions to improve results further.
 * Allow to dynamic function to view more results.
 * Have the option to see similar animes without similar names. IE: Naruto movies get recommended more Naruto content.
 * Dynamic scrolling of tables horozontally with javascript.
