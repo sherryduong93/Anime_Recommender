@@ -1,7 +1,7 @@
 # Welcome to your anime match maker.
 ![image](images/flask_welcome.png)
 ## Contents
-* [Motivations & Goals](#motivations-&-goals)
+* [Motivations & Goals](#motivations-and-goals)
 * [The Data](#the-data)
   * [Data Cleaning](#data-cleaning)
   * [Exploratory Data Analysis](#eda)
@@ -12,7 +12,7 @@
 * [Find Your Next Anime!](#flask-app-find-your-next-anime)
 * [Conclusion, Caveats and Next Steps](#conclusion-caveats-and-next-steps)
 
-## Motivations & Goals
+## Motivations and Goals
 Since shelter-in-place was enacted, more people have been staying home looking for more ways to pass the time. Like many, I found myself wanting to escape to a world of fantasy, and found that anime was the best way to do this.
 <br>However, when I finished one anime, I was surpised how difficult it was to find a similar anime to the one I enjoyed. It required searching on Google and going through various forums to find suggestions that seemed aligned to my tastes.
 <br>**In order to address this problem, my goal will be to create:**
@@ -32,7 +32,6 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 
 ## Data Cleaning
 * Ratings: Removed all ratings with '-1' which indicates no rating.
-* Ratings matrix does not have ALL of the ratings provided by the users that make up the average rating column in the anime_df, will need to consider this for the collaborative filter based recommender. 
 
 **Combining dataframes to get one large dataframe with all metadata for each anime**
 * The function for below cleaning is stored in src/data_funcs.py, full_anime_df() function: 
@@ -141,7 +140,7 @@ Explored simple KNN & SVD based collaborative filter models, imputing the NaN's 
 
 ## Model Based Collaborative Filtering with Spark ALS
 * Lastly, I used Spark's ALS model to fit a collaborative filter based recommender that will recommend anime based on the preferences of other users who liked the anime you provided.
-* Basline hyper-parameters: cold-start strategy: drop, 10 latent features, 20 max iterations and 0.1 regularization, this gave me a validation RMSE of 0.13. I then used ALS model's cross validator estimator to tune the model.
+* Basline hyper-parameters: cold-start strategy: drop, 10 latent features, 20 max iterations and 0.1 regularization, this gave me a validation RMSE of 1.13. I then used ALS model's cross validator estimator to tune the model.
 * Functions for this recommender are stored in src/als_collab_filt.py, and tuning of the model is stored in ALS_tuning.ipynb. Tuning of the model was done on AWS Sagemaker.
 
 **Results**
