@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %} Anime Page{% endblock %}
+{% block content %}
+<center>
+    <h1> Welcome!</h1>
+    <p>To find your next anime, search for your favorite anime using the form below, or click "Take me to the recommender" if you already know the appropriate anime_id.</p>
+    <br>
+    <button style="background-color: maroon; color: white;" type="button" onclick="window.location.href='{{ url_for( 'engine' , table='Y' ) }}';">Take me to the recommender!</button>
+    <br><br>
+    <h1>{{ content }}</h1>
+    <form action="#" method="post" name="help">
+        <p style="background-color: white; font-weight: bold;">Need Help Finding the Correct Anime ID?</p>
+        <p><input type="text" placeholder="Select: Movie, TV, or Both:" name="mt" size="50"/></p>
+        <p><input type="text" placeholder="Search for Title Keyword:" name="kw" size="50"/></p>
+        <p><input type="submit" value="Search" name='search' style="background-color: black; color: white;"/></p>
+    </form>
+    <br>
+</center>
+{% endblock %}

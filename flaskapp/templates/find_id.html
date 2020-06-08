@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %} Search Results {% endblock %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<center>
+<h2 style="color:maroon;">Anime Titles Matching Keyword Search:</h2>
+{% for table in search_results %}
+            <!-- {{titles_search[loop.index]}} -->
+            {{ table|safe }}
+{% endfor %}
+<br><br>
+<button type="button" style="background-color:maroon; color:white;" onclick="window.location.href='{{ url_for( 'engine' , table='Y' ) }}';">Take me to the recommender!</button>
+</center>
+<br><br>
+{% endblock %}
+</body>
+</html>
