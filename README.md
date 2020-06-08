@@ -9,7 +9,7 @@
   * [Content based filtering](#content-based-recommender-system)
   * [Simple Collaborative filtering](#simple-collaborative-filtering)
   * [Collaborative filtering](#model-based-collaborative-filtering-with-spark-als)
-* [Find Your Next Anime!](#flask-app-your-anime-match-maker)
+* [App: Your Anime Match Maker!](#flask-app-your-anime-match-maker)
 * [Conclusion, Caveats and Next Steps](#conclusion-caveats-and-next-steps)
 
 ## Motivations and Goals
