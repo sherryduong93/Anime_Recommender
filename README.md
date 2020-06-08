@@ -188,8 +188,11 @@ Explored simple KNN & SVD based collaborative filter models, imputing the NaN's 
 * The RMSE is not an exact measure either, since the ultimate success of the project is to provide the most useful recommendations to users.
 
 **Next Steps**
+* Scrape description of each anime to display with the recommendations. NLP with the descriptions to improve results further.
+* Allow to dynamic function to view more results.
+* Have the option to see similar animes without similar names. IE: Naruto movies get recommended more Naruto content.
+* Dynamic scrolling of tables horozontally with javascript.
 * Find more user metadata to explore clusters of users.
-* Scrape description of each anime and user as a feature through NLP.
 * N-grams for the genre, pairs may be useful.
 
 ### Data Sources:
