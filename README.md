@@ -78,13 +78,13 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * Spot check results: The recommender seems to be recommending popular animes instead of more genre/theme specific.
 * RMSE (Cosine Similarity on 100K subset of test): 1.35
 * RMSE (Correlation on 100K subset of test): 1.49 
-* RMSE on 300K from test set: 1.347
+* RMSE on 700K from test set: 1.347
 **Due to computational/time constraints, was unable to evaluate on the entire test set, will continue trying and update accordingly as more results surface**
 
 **Content Based Recommender Iteration 2:**
 * Added dummified genre to the content based model, continued with cosine similarity
 * Spot check results: overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though still not perfect
-* RMSE on 100K random samples from test set: 1.31, slight improvement on RMSE, although the recommendations for certain spot checks are much better in my subjective review.
+* RMSE on 500K random samples from test set: 1.31, slight improvement on RMSE, although the recommendations for certain spot checks are much better in my subjective review.
 
 **Content Based Recommender Iteration 3**
 * Based on the EDA, some producers/studios have higher ratings overall than others, so I created dummy variables for each of the top 20 studios/producers, but this had no impact on the recommendations.
@@ -107,11 +107,11 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>On average, each user provides 90 ratings, median number of ratings given per user is 45
 <br>On average, each anime has 638 ratings, median number of ratings provided per anime is 57
 ![image](images/rating_count_dist.png)
-<br>For our simple collaborative filter recommenders, we want to recommend the most popular movies from our most active users. I will be removing all users with less than 300 ratings, and all animes with less than 2500 ratings. 
+<br>For a simple collaborative filter recommenders, I want to recommend the most popular movies from our most active users. I will be removing all users with less than 300 ratings, and all animes with less than 2500 ratings. 
 <br>This leaves us with 4326 users, and 694 anime. This leaves us with 1M reviews.
 <br>The model functions for below KNN/SVD are stored in src/Popular_CollabFilt.py.
 ### KNN Collaborative Filter
-Explored simple KNN & SVD based collaborative filter models, imputing the NaN's with zeros, average per user, and average per rating. The exploration of this process can be viewed in Notebooks/Simple_CF.ipynb.
+Explored simple KNN & SVD based collaborative filter models, imputing the NaN's with zeros, average per user, and average per anime. The exploration of this process can be viewed in Notebooks/Simple_CF.ipynb.
 <br> **Example from KNN: Fill in NaN's with average anime rating:**
 Recommendations for 120 ['Fruits Basket']:
 > - 1: ['Ouran Koukou Host Club'], with distance of 0.373
@@ -142,14 +142,14 @@ Recommendations for 120 ['Fruits Basket']:
 
 ## Model Based Collaborative Filtering with Spark ALS
 * Lastly, I used Spark's ALS model to fit a collaborative filter based recommender that will recommend anime based on the preferences of other users who liked the anime you provided.
-* Basline hyper-parameters: cold-start strategy: drop, 10 latent features, 20 max iterations and 0.1 regularization, this gave me a validation RMSE of 1.13. I then used ALS model's cross validator estimator to tune the model.
+* Baseline hyper-parameters: cold-start strategy: drop, 10 latent features, 20 max iterations and 0.1 regularization, this gave me a validation RMSE of 1.13. I then used ALS model's cross validator estimator to tune the model.
 * Functions for this recommender are stored in src/als_collab_filt.py, and tuning of the model is stored in Notebooks/ALS_tuning.ipynb. Tuning of the model was done on AWS Sagemaker.
 
 **Results**
 * Train RMSE: 1.03
 * Validation RMSE: 1.15
-* Test RMSE on same test-size as content based (300K): 1.133
-* Test RMSE on Cross-Validated (and tuned) model: 1.13
+* Test RMSE on same test-size as content based: 1.133
+* Test RMSE on Cross-Validated (and tuned) model, entire test-set: 1.13
 
 **Final tuned ALS model had 15 latent features**
 * Latent features seem to be attempting to separate based on level of maturity and genre, with certain themes (school, sports, etc).
@@ -176,7 +176,7 @@ Recommendations for 120 ['Fruits Basket']:
 <br>App Demo:<br>
 ![image](images/app-demo2.gif)
 
-* On the Recommeder page, you can view the most popular anime, or filter to the most popular anime for specific genre.
+* On the Recommeder page, you can view the most popular anime, or filter to the most popular anime for specific genre. Most popular is defined as the most highly rated anime with the highest number of ratings.
 * If you already have an anime that you enjoyed in the past, you can locate the anime_id with the search page, or paste the anime_id into the form to get recommendations.
 * On the recommendations page (below) you will receive 20 recommendations based on similarity to the specified anime, and 20 recommendations based on other user preferences.
 
@@ -189,20 +189,18 @@ Recommendations for 120 ['Fruits Basket']:
 * At this time, due to computational needs for the app, it is not deployed just yet. But will be coming soon!
 
 ## Conclusion, Caveats and Next Steps
-* Due to computational/time constraints, I was not able to evaluate my content based recommender using all of the test day to get true evaluation.
-* Recommender system performance is notoriously hard to quantify. 
+* Due to computational/time constraints, I was not able to evaluate my content based recommender using all of the test data to get true evaluation.
 * Spot-checking a few instances is not enough to evaluate the entire model, and can be subjective depending on the user. 
 * The RMSE is not an exact measure either, since the ultimate success of the project is to provide the most useful recommendations to users.
 
 **Next Steps**
-* Popularity recommender specific to genre and content type specified.
 * Scrape description of each anime to display with the recommendations. 
 * NLP with the descriptions to improve results further.
 * Allow to dynamic function to view more results.
 * Have the option to see similar animes without similar names. IE: Naruto movies get recommended more Naruto content.
-* Dynamic scrolling of tables horozontally with javascript.
 * Find more user metadata to explore clusters of users.
 * N-grams for the genre, pairs may be useful.
+* Neural Network to see how the recommendations will compare
 
 ### Data Sources:
 Anime & user metadata from : https://www.kaggle.com/azathoth42/myanimelist
