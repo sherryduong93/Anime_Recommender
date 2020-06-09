@@ -78,13 +78,13 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * Spot check results: The recommender seems to be recommending popular animes instead of more genre/theme specific.
 * RMSE (Cosine Similarity on 100K subset of test): 1.35
 * RMSE (Correlation on 100K subset of test): 1.49 
-* RMSE on 700K from test set: 1.347
+* RMSE on 800K from test set: 1.347
 **Due to computational/time constraints, was unable to evaluate on the entire test set, will continue trying and update accordingly as more results surface**
 
 **Content Based Recommender Iteration 2:**
 * Added dummified genre to the content based model, continued with cosine similarity
 * Spot check results: overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though still not perfect
-* RMSE on 500K random samples from test set: 1.31, slight improvement on RMSE, although the recommendations for certain spot checks are much better in my subjective review.
+* RMSE on 600K random samples from test set: 1.31, slight improvement on RMSE, although the recommendations for certain spot checks are much better in my subjective review.
 
 **Content Based Recommender Iteration 3**
 * Based on the EDA, some producers/studios have higher ratings overall than others, so I created dummy variables for each of the top 20 studios/producers, but this had no impact on the recommendations.
@@ -173,7 +173,7 @@ Recommendations for 120 ['Fruits Basket']:
 <br>Upon spot-checking a few familiar anime, the recommendations from other users consist of some anime that is not so well know. When I searched a description of that anime, it seemed to match very well with the anime searched. I will definitely be testing out some of these recommendations to find my next anime!
 
 ## Flask App: Your Anime Match Maker!
-<br>App Demo:<br>
+<br>App Demo: [Link To WebApp](https://animerecz.herokuapp.com/)<br>
 ![image](images/app-demo2.gif)
 
 * On the Recommeder page, you can view the most popular anime, or filter to the most popular anime for specific genre. Most popular is defined as the most highly rated anime with the highest number of ratings.
@@ -181,9 +181,10 @@ Recommendations for 120 ['Fruits Basket']:
 * On the recommendations page (below) you will receive 20 recommendations based on similarity to the specified anime, and 20 recommendations based on other user preferences.
 
 <br>**Spot-Checking Some Results - Maid Sama:**
-<br><img src="images/Recs_MaidSama.png" width="425"/> <img src="images/myanimelist_recs_Maid.png" width="425"/> 
-<br>**Spot-Check: Hunter x Hunter**
-<br><img src="images/flask_Hunter.png" width="425"/> <img src="images/MAL_Hunter.png" width="425"/> 
+<br>MyAnimeList Recommendations:
+![image](images/myanimelist_recs_Maid.png)
+<br>Your Anime Match Maker Recommendations:
+![image](images/Recs_MaidSama.png)
 * The Content Based Recommender is recommending similar items to MyAnimeList for both anime.
 * For recommendations from other users, I suspect some hidden gems in this list!
 * At this time, due to computational needs for the app, it is not deployed just yet. But will be coming soon!
