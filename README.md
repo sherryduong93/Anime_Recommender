@@ -187,7 +187,6 @@ Recommendations for 120 ['Fruits Basket']:
 ![image](images/Recs_MaidSama.png)
 * The Content Based Recommender is recommending similar items to MyAnimeList for both anime.
 * For recommendations from other users, I suspect some hidden gems in this list!
-* At this time, due to computational needs for the app, it is not deployed just yet. But will be coming soon!
 
 ## Conclusion, Caveats and Next Steps
 * Due to computational/time constraints, I was not able to evaluate my content based recommender using all of the test data to get true evaluation.
