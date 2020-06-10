@@ -6,10 +6,10 @@
   * [Data Cleaning](#data-cleaning)
   * [Exploratory Data Analysis](#eda)
 * [Recommenders](#baseline-model)
-  * [Popularity Recommender](#popularity-based-recommender-system)
-  * [Content based filtering](#content-based-recommender-system)
-  * [Simple Collaborative filtering](#simple-collaborative-filtering)
-  * [Collaborative filtering](#model-based-collaborative-filtering-with-spark-als)
+  * [Popularity](#popularity-based-recommender-system)
+  * [Content Based](#content-based-recommender-system)
+  * [Simple Collaborative Filtering](#simple-collaborative-filtering)
+  * [Model Based Collaborative Filtering](#model-based-collaborative-filtering-with-spark-als)
 * [App: Your Anime Match Maker!](#flask-app-your-anime-match-maker)
 * [Conclusion, Caveats and Next Steps](#conclusion-caveats-and-next-steps)
 
@@ -69,7 +69,6 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * Using just the average to predict user ratings already gathers pretty decent results. 
 
 ## Popularity Based Recommender System:
-**Use the average rating of the training data to predict user ratings of the test data**
 * A simple popularity recommender was generated, which returns the top 20 anime based on average rating & number of ratings.
 * This will be added to the flask app, along with an option to filter the popular recommendations based on genre of the anime.
 
