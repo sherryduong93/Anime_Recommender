@@ -78,13 +78,13 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * Spot check results: The recommender seems to be recommending popular animes instead of more genre/theme specific.
 * RMSE (Cosine Similarity on 100K subset of test): 1.35
 * RMSE (Correlation on 100K subset of test): 1.49 
-* RMSE on 800K from test set: 1.347
+* RMSE on test set: 1.346
 **Due to computational/time constraints, was unable to evaluate on the entire test set, will continue trying and update accordingly as more results surface**
 
 **Content Based Recommender Iteration 2:**
 * Added dummified genre to the content based model, continued with cosine similarity
 * Spot check results: overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though still not perfect
-* RMSE on 600K random samples from test set: 1.31, slight improvement on RMSE, although the recommendations for certain spot checks are much better in my subjective review.
+* RMSE on test set: 1.305, slight improvement on RMSE, although the recommendations for certain spot checks are much better in my subjective review.
 
 **Content Based Recommender Iteration 3**
 * Based on the EDA, some producers/studios have higher ratings overall than others, so I created dummy variables for each of the top 20 studios/producers, but this had no impact on the recommendations.
