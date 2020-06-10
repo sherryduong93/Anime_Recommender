@@ -6,6 +6,7 @@
   * [Data Cleaning](#data-cleaning)
   * [Exploratory Data Analysis](#eda)
 * [Recommenders](#baseline-model)
+  * [Popularity Recommender](#popularity-based-recommender-system)
   * [Content based filtering](#content-based-recommender-system)
   * [Simple Collaborative filtering](#simple-collaborative-filtering)
   * [Collaborative filtering](#model-based-collaborative-filtering-with-spark-als)
@@ -67,6 +68,11 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * RMSE: 1.57
 * Using just the average to predict user ratings already gathers pretty decent results. 
 
+## Popularity Based Recommender System:
+**Use the average rating of the training data to predict user ratings of the test data**
+* A simple popularity recommender was generated, which returns the top 20 anime based on average rating & number of ratings.
+* This will be added to the flask app, along with an option to filter the popular recommendations based on genre of the anime.
+
 ## Content Based Recommender System:
 **Anime_id Keyword**
 * To help users search for the anime_id desired, a helper function called find_id() in src/model_funcs.py was created, which will return all titles that have the keyword.
@@ -78,13 +84,12 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 * Spot check results: The recommender seems to be recommending popular animes instead of more genre/theme specific.
 * RMSE (Cosine Similarity on 100K subset of test): 1.35
 * RMSE (Correlation on 100K subset of test): 1.49 
-* RMSE on test set: 1.346
-**Due to computational/time constraints, was unable to evaluate on the entire test set, will continue trying and update accordingly as more results surface**
+* Final RMSE on test set: 1.346
 
 **Content Based Recommender Iteration 2:**
 * Added dummified genre to the content based model, continued with cosine similarity
 * Spot check results: overall, the genre significantly helped with the recommendations. The recommender is now recommending more highly rated anime that is closer to the genre specified, though still not perfect
-* RMSE on test set: 1.305, slight improvement on RMSE, although the recommendations for certain spot checks are much better in my subjective review.
+* Final RMSE on test set: 1.305, slight improvement on RMSE, although the recommendations for certain spot checks are much better in my subjective review.
 
 **Content Based Recommender Iteration 3**
 * Based on the EDA, some producers/studios have higher ratings overall than others, so I created dummy variables for each of the top 20 studios/producers, but this had no impact on the recommendations.
