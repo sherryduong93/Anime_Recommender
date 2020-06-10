@@ -175,7 +175,7 @@ Recommendations for 120 ['Fruits Basket']:
 <br>Upon spot-checking a few familiar anime, the recommendations from other users consist of some anime that is not so well known. When I searched a description of that anime, it seemed to match very well with the anime searched. I will definitely be testing out some of these recommendations to find my next anime!
 
 ## Flask App: Your Anime Match Maker!
-<br>App Demo: [Link To Webapp](https://animerecz.herokuapp.com/)<br>
+<br>App Demo: [Link To Your Anime Match Maker](https://animerecz.herokuapp.com/)<br>
 ![image](images/app-demo2.gif)
 
 * On the Recommeder page, you can view the most popular anime, or filter to the most popular anime for specific genre. Most popular is defined as the most highly rated anime with the highest number of ratings.
@@ -205,6 +205,9 @@ Recommendations for 120 ['Fruits Basket']:
 * Find more user metadata to explore clusters of users.
 * N-grams for the genre, pairs may be useful.
 * Neural Network to see how the recommendations will compare
+
+**Want To Add Feedback?**
+* Check out [Your Anime Match Maker](https://animerecz.herokuapp.com/feedback) to give your input on the recommendations!
 
 ### Data Sources:
 Anime & user metadata from : https://www.kaggle.com/azathoth42/myanimelist
