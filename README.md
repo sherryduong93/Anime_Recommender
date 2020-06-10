@@ -112,7 +112,7 @@ Since shelter-in-place was enacted, more people have been staying home looking f
 <br>On average, each anime has 638 ratings, median number of ratings provided per anime is 57
 ![image](images/rating_count_dist.png)
 <br>For a simple collaborative filter recommenders, I want to recommend the most popular movies from our most active users. I will be removing all users with less than 300 ratings, and all animes with less than 2500 ratings. 
-<br>This leaves us with 4326 users, and 694 anime. This leaves us with 1M reviews.
+<br>This leaves us with 4326 users, 694 anime, and 1M reviews.
 <br>The model functions for below KNN/SVD are stored in src/Popular_CollabFilt.py.
 ### KNN Collaborative Filter
 Explored simple KNN & SVD based collaborative filter models, imputing the NaN's with zeros, average per user, and average per anime. The exploration of this process can be viewed in Notebooks/Simple_CF.ipynb.
@@ -141,8 +141,7 @@ Recommendations for 120 ['Fruits Basket']:
 > - Feature 9: Supernatural and psychological</pre>
 * **Result:** Upon spot-checking a recommendation, the results did not perform as well as KNN. SVD is having trouble recommending the correct genre and is recommending action animes for every attempt. This is similar to what we saw during latent feature exploration with the action genre in nearly every latent feature.
 
-**Ultimately did not proceed with these simple options due to high computational costs, these models were created only with the most popular anime, and the most active users. Computation and evaluation would be high.**
-<br>Next we will look into ALS matrix factorization with Spark in order to use all of the data present.
+**Ultimately did not proceed with these simple options due to high computational costs, these models are also biased as they were created only with the most popular anime, and the most active users.**
 
 ## Model Based Collaborative Filtering with Spark ALS
 * Lastly, I used Spark's ALS model to fit a collaborative filter based recommender that will recommend anime based on the preferences of other users who liked the anime you provided.
@@ -152,11 +151,10 @@ Recommendations for 120 ['Fruits Basket']:
 **Results**
 * Train RMSE: 1.03
 * Validation RMSE: 1.15
-* Test RMSE on same test-size as content based: 1.133
-* Test RMSE on Cross-Validated (and tuned) model, entire test-set: 1.13
+* Test RMSE on Cross-Validated (and tuned) model: 1.13
 
 **Final tuned ALS model had 15 latent features**
-* Latent features seem to be attempting to separate based on level of maturity and genre, with certain themes (school, sports, etc).
+* Latent features seem to be attempting to separate based on level of maturity and genre, with certain themes (school, sports, music, etc).
 > - 0: RX/mature
 > - 1: Unclear, mix of random genres, mature
 > - 2: Action/Adventure
@@ -174,10 +172,10 @@ Recommendations for 120 ['Fruits Basket']:
 > - 14: Mature content with sports theme 
 
 **Spot-Check Results:** 
-<br>Upon spot-checking a few familiar anime, the recommendations from other users consist of some anime that is not so well know. When I searched a description of that anime, it seemed to match very well with the anime searched. I will definitely be testing out some of these recommendations to find my next anime!
+<br>Upon spot-checking a few familiar anime, the recommendations from other users consist of some anime that is not so well known. When I searched a description of that anime, it seemed to match very well with the anime searched. I will definitely be testing out some of these recommendations to find my next anime!
 
 ## Flask App: Your Anime Match Maker!
-<br>App Demo: [Link To WebApp](https://animerecz.herokuapp.com/)<br>
+<br>App Demo: [Link To Webapp](https://animerecz.herokuapp.com/)<br>
 ![image](images/app-demo2.gif)
 
 * On the Recommeder page, you can view the most popular anime, or filter to the most popular anime for specific genre. Most popular is defined as the most highly rated anime with the highest number of ratings.
@@ -189,15 +187,17 @@ Recommendations for 120 ['Fruits Basket']:
 ![image](images/myanimelist_recs_Maid.png)
 <br>Your Anime Match Maker Recommendations:
 ![image](images/Recs_MaidSama.png)
-* The Content Based Recommender is recommending similar items to MyAnimeList for both anime.
+* The Content Based Recommender is recommending anime in the top 5 recommendations from MyAnimeList.
 * For recommendations from other users, I suspect some hidden gems in this list!
 
 ## Conclusion, Caveats and Next Steps
-* Due to computational/time constraints, I was not able to evaluate my content based recommender using all of the test data to get true evaluation.
+* **There are a lot of anime out there!** When asking anime enthusiasts for feedback, those who recognized most of the recommendations thought the recommendations were good. Those with less anime exposure did not recognize many of the recommendations, and were unable to provide a final evaluation.
 * Spot-checking a few instances is not enough to evaluate the entire model, and can be subjective depending on the user. 
 * The RMSE is not an exact measure either, since the ultimate success of the project is to provide the most useful recommendations to users.
+* The dataset used for this recommender system only has the animes released before 2018, and is missing more recent titles.
 
 **Next Steps**
+* Scrape more recent data to get updated recommendations.
 * Scrape description of each anime to display with the recommendations. 
 * NLP with the descriptions to improve results further.
 * Allow to dynamic function to view more results.
